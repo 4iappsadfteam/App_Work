@@ -1,0 +1,90 @@
+button click
+Popup open
+  2 button + 1 table
+  button 1= Referesh
+  button 2= Add
+
+Separate java class
+
+
+//package com.po.fusion.view.backing;
+
+import com.po.fusion.view.backing.Utils.ADFUtils;
+import com.po.fusion.view.backing.Utils.JSFUtils;
+
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+import java.beans.PropertyVetoException;
+import java.beans.VetoableChangeListener;
+import java.beans.VetoableChangeSupport;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import javax.faces.event.ActionEvent;
+
+import oracle.adf.view.rich.component.rich.RichPopup;
+import oracle.adf.view.rich.component.rich.data.RichTable;
+import oracle.adf.view.rich.component.rich.input.RichInputText;
+
+import oracle.adf.view.rich.context.AdfFacesContext;
+
+import oracle.jbo.Row;
+import oracle.jbo.ViewObject;
+
+import org.apache.myfaces.trinidad.model.RowKeySet;
+
+import po.fusion.model.POJO.BusinessUnit;
+import po.fusion.model.java.BIService;
+
+public class PopulateValues {
+    public PopulateValues() {
+        super();
+    }
+    //==================================================================================
+    List<BusinessUnit> businessUnitList = new ArrayList();
+
+    public void searchBU(ActionEvent actionEvent) {
+        BIService bi = new BIService();
+        businessUnitList = bi.populateBusinessUnit();
+    }
+
+    public void onClickAddBU(ActionEvent actionEvent) {
+        RichTable itemTable = (RichTable)JSFUtils.findComponentInRoot("t177");
+        if (!(itemTable.getRowCount() == 0)) {
+            RowKeySet selectedRow = itemTable.getSelectedRowKeys();
+            Iterator selectedRowIter = selectedRow.iterator();
+            ViewObject headerVO =
+                ADFUtils.findIterator("XxemsCustPoHeaders_VO2Iterator").getViewObject();
+            Row currRow = headerVO.getCurrentRow();
+            while (selectedRowIter.hasNext()) {
+                String i = selectedRowIter.next().toString();
+                BusinessUnit row = businessUnitList.get(Integer.parseInt(i));
+                System.err.println("===BU==" + row.getBU_ID());
+                currRow.setAttribute("ProcOrgId", row.getBU_ID());
+                currRow.setAttribute("ProcOrgName", row.getBU_NAME());
+                currRow.setAttribute("RequOrgId", row.getBU_ID());
+                currRow.setAttribute("RequOrgName", row.getBU_NAME());
+                currRow.setAttribute("SoldToLegalEntityId", row.getLE_ID());
+                currRow.setAttribute("SoldToLegalEntity", row.getLE_NAME());
+            }
+            closePopup("p1");  
+        }
+       }
+    public void closePopup(String popupId) {
+        RichPopup p1 = (RichPopup)JSFUtils.findComponentInRoot(popupId);
+        p1.cancel();
+        AdfFacesContext.getCurrentInstance().addPartialTarget(p1);  
+    }
+    //=====================================================================
+
+
+    public void setBusinessUnitList(List<BusinessUnit> businessUnitList) {
+        this.businessUnitList = businessUnitList;
+    }
+
+    public List<BusinessUnit> getBusinessUnitList() {
+        return businessUnitList;
+    }
+}
