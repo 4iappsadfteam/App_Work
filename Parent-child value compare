@@ -1,0 +1,38 @@
+Parent table value
+
+compare with child table (child table row set iterator)
+
+
+    public void onChangeQty(ValueChangeEvent valueChangeEvent) {
+    valueChangeEvent.getComponent().processUpdates(FacesContext.getCurrentInstance());   
+    System.err.println("Shipment old value"+valueChangeEvent.getOldValue());
+    System.err.println("Shipment New value"+valueChangeEvent.getNewValue());
+        float total=0;
+        if(valueChangeEvent.getNewValue()!=null){
+            Row shipCurrentRow=shipVO.getCurrentRow();
+            RowSetIterator rs=shipVO.createRowSet("");
+            System.err.println("===Line Level Current Row Quantity=="+lineCurrentRow.getAttribute("Quantity")); 
+            float lineCurrentQty=Float.parseFloat(lineCurrentRow.getAttribute("Quantity").toString());
+            System.err.println("====Starting Shipment QTY Total===="+total);     
+            while(rs.hasNext()){
+                Row r=rs.next();
+                float qty=Float.parseFloat(r.getAttribute("ShipQuantity")!=null?r.getAttribute("ShipQuantity").toString():"0");
+                    total+=qty;         
+             if(total<=lineCurrentQty){
+                 System.err.println("with in line QTY so adding===");
+                System.err.println("----"+total+"+++++"+lineCurrentQty);
+             }else if(total>=lineCurrentQty){
+                 System.err.println("+++++Out of line+++++++ Reset");
+                 JSFUtils.addFacesInformationMessage("Please check Shipment Quantity Limit Exiting the Limit");
+                 shipVO.getCurrentRow().setAttribute("ShipQuantity", "");
+                 AdfFacesContext.getCurrentInstance().addPartialTarget(it12);
+             }else{
+                 System.err.println("+++++Out of line2+++++++ Reset");
+                 JSFUtils.addFacesInformationMessage("Please check Shipment Quantity Limit Exiting the Limit");
+                 shipVO.getCurrentRow().setAttribute("ShipQuantity", "");
+                 AdfFacesContext.getCurrentInstance().addPartialTarget(it12);
+                }
+             }
+            System.err.println("====Over ALl Shipment QTY Total===="+total);     
+            }
+       }
