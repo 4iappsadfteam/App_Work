@@ -1,0 +1,39 @@
+
+Button Click
+
+Current Row Split in to two
+
+
+
+    public void onClickShipmentSplit(ActionEvent actionEvent) {
+      Row currentRow=shipVO.getCurrentRow();
+      float shipQty=Float.parseFloat(currentRow.getAttribute("ShipQuantity")!=null?currentRow.getAttribute("ShipQuantity").toString():"0")/2;
+      System.err.println("Dividing shipQty"+shipQty);  
+      currentRow.setAttribute("ShipQuantity", shipQty);
+      AdfFacesContext.getCurrentInstance().addPartialTarget(it12);
+      
+      Row newRow=shipVO.createRow();
+      newRow.setAttribute("CpoHeaderId", currentRow.getAttribute("CpoHeaderId"));  
+      newRow.setAttribute("CpoLineId", currentRow.getAttribute("CpoLineId"));
+        newRow.setAttribute("PoHeaderId", currentRow.getAttribute("PoHeaderId"));
+        newRow.setAttribute("Trans_Item", currentRow.getAttribute("Trans_Item"));
+        newRow.setAttribute("PoLineId", currentRow.getAttribute("PoLineId"));
+        newRow.setAttribute("PoScheduleId", currentRow.getAttribute("PoScheduleId"));
+        newRow.setAttribute("ScheduleNumber", currentRow.getAttribute("ScheduleNumber"));
+        newRow.setAttribute("ShipToLocationId", currentRow.getAttribute("ShipToLocationId"));
+        newRow.setAttribute("ShipToLocationCode", currentRow.getAttribute("ShipToLocationCode"));
+        newRow.setAttribute("ShipToOrgId", currentRow.getAttribute("ShipToOrgId"));
+        newRow.setAttribute("ShipToOrgCode", currentRow.getAttribute("ShipToOrgCode"));
+        newRow.setAttribute("ShipToOrgName", currentRow.getAttribute("ShipToOrgName"));
+        newRow.setAttribute("ShipQuantity", currentRow.getAttribute("ShipQuantity"));
+        newRow.setAttribute("Trans_UOM", currentRow.getAttribute("Trans_UOM"));
+        newRow.setAttribute("UomCode", currentRow.getAttribute("UomCode"));
+        newRow.setAttribute("NeedByDate", currentRow.getAttribute("NeedByDate"));
+        newRow.setAttribute("DestinationTypeCode", currentRow.getAttribute("DestinationTypeCode"));
+        newRow.setAttribute("PromisedDate", currentRow.getAttribute("PromisedDate"));
+        newRow.setAttribute("DestinationType", currentRow.getAttribute("DestinationType"));
+        newRow.setAttribute("SubinventoryCode", currentRow.getAttribute("SubinventoryCode"));
+        newRow.setAttribute("IdentityFlag", currentRow.getAttribute("IdentityFlag"));
+       shipVO.insertRow(newRow);
+      
+    }
