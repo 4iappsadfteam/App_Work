@@ -1,0 +1,130 @@
+Search:-LOV 
+
+************************************************************************************************	   
+   List<Supplier> SupplierList = new ArrayList();
+   
+   public void searchSupplier(ActionEvent actionEvent) {
+        RichInputText it2=(RichInputText)JSFUtils.findComponentInRoot("it2");
+        String name= it2.getValue()==null?"":it2.getValue().toString();
+         BIService bi = new BIService();
+        //SupplierList = bi.populateSupplier();
+		SupplierList = bi.populateSupplier(name);
+    }
+
+************************************************************************************************	
+	
+	    public void onClickAddSupplier(ActionEvent actionEvent) {
+        RichTable itemTable = (RichTable)JSFUtils.findComponentInRoot("t99");
+        if (!(itemTable.getRowCount() == 0)) {
+            RowKeySet selectedRow = itemTable.getSelectedRowKeys();
+            Iterator selectedRowIter = selectedRow.iterator();
+            ViewObject headerVO =
+                ADFUtils.findIterator("XxemsCustPoHeaders_VO2Iterator").getViewObject();
+            Row currRow = headerVO.getCurrentRow();
+            while (selectedRowIter.hasNext()) {
+                String i = selectedRowIter.next().toString();
+                Supplier row = SupplierList.get(Integer.parseInt(i));
+                System.err.println("===BU==" + row.getSUPPLIER_ID());
+                currRow.setAttribute("SupplierId", row.getSUPPLIER_ID());
+                currRow.setAttribute("SupplierNumber", row.getSUPPLIER_NUM());
+                currRow.setAttribute("Supplier", row.getSUPPLIER_NAME());
+              }
+            closePopup("p2");
+            SupplierList.clear();
+        }
+    }
+************************************************************************************************
+//****************************Supplier*****************************************************//
+
+    public List<Supplier> populateSupplier(String searchName) {
+        if (ADFContext.getCurrent().getPageFlowScope().get("BU_IDS") != null) {
+            String str = null;
+            ScheduleRequest sreq = new ScheduleRequest();
+            PublicReportServiceService publicReportServiceService =
+                new PublicReportServiceService();
+            PublicReportService publicReportService =
+                publicReportServiceService.getPublicReportService();
+            ReportRequest reportRequest = new ReportRequest();
+            reportRequest.setAttributeFormat("xml");
+            reportRequest.setAttributeLocale("en-US");
+            reportRequest.setAttributeTemplate("Simple");
+            reportRequest.setByPassCache(true);
+            reportRequest.setSizeOfDataChunkDownload(-1);
+            reportRequest.setReportAbsolutePath(SupplierListPath);
+            ArrayOfParamNameValue pNameValue = new ArrayOfParamNameValue();
+            ParamNameValue nameValue = new ParamNameValue();
+            nameValue.setName("p_bu_id");
+            ArrayOfString aos = new ArrayOfString();
+            aos.getItem().add(ADFContext.getCurrent().getPageFlowScope().get("BU_IDS").toString());
+            nameValue.setValues(aos);
+            pNameValue.getItem().add(nameValue);
+            reportRequest.setParameterNameValues(pNameValue);
+            sreq.setReportRequest(reportRequest);
+            sreq.setSaveDataOption(true);
+            sreq.setScheduleBurstringOption(false);
+            sreq.setSchedulePublicOption(true);
+            sreq.setUserJobName("TEST");
+            try {
+                ReportResponse response = new ReportResponse();
+                response =
+                        publicReportService.runReport(reportRequest, userName,
+                                                      passWord);
+                str = response.getReportBytesAsString();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                DocumentBuilder db =
+                    DocumentBuilderFactory.newInstance().newDocumentBuilder();
+                InputSource is = new InputSource();
+                is.setCharacterStream(new StringReader(str));
+                Document doc = db.parse(is);
+                NodeList nodes = doc.getElementsByTagName("G_1");
+                for (int i = 0; i < nodes.getLength(); i++) {
+                    Node nNode = nodes.item(i);
+                    if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+                        Element element = (Element)nNode;
+                        Long SUPPLIER_ID_Obj;
+                        if (element.getElementsByTagName("SUPPLIER_ID").item(0).getChildNodes().getLength() >
+                            0) {
+                            SUPPLIER_ID_Obj =
+                                    Long.valueOf(element.getElementsByTagName("SUPPLIER_ID").item(0).getTextContent().toString());
+                        } else {
+                            SUPPLIER_ID_Obj = null;
+                        }
+                        
+                        String supplierName= (element.getElementsByTagName("SUPPLIER_NAME").item(0).getTextContent() !=
+                         null ? element.getElementsByTagName("SUPPLIER_NAME").item(0).getTextContent().toString() :
+                         null);
+                        
+                      if(searchName!=null){
+                           if(supplierName!=null&&supplierName.startsWith(supplierName)){
+                              SupplierList.add(new Supplier(SUPPLIER_ID_Obj,
+                              (element.getElementsByTagName("SUPPLIER_NUM").item(0).getTextContent() !=
+                              null ?
+                              element.getElementsByTagName("SUPPLIER_NUM").item(0).getTextContent().toString() :
+                              null), supplierName, null, null));    
+                            }
+                                                   
+                        }else{
+                               SupplierList.add(new Supplier(SUPPLIER_ID_Obj,
+                               (element.getElementsByTagName("SUPPLIER_NUM").item(0).getTextContent() !=
+                               null ?
+                               element.getElementsByTagName("SUPPLIER_NUM").item(0).getTextContent().toString() :
+                               null), supplierName, null, null));    
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                System.err.println("===SupplierUnit===" + e);
+            }
+        }
+        return SupplierList;
+
+    }
+
+*********************************************************************************
+
+	
+	
+	
