@@ -7,11 +7,33 @@ Current Row Split in to two
 
     public void onClickShipmentSplit(ActionEvent actionEvent) {
       Row currentRow=shipVO.getCurrentRow();
-      float shipQty=Float.parseFloat(currentRow.getAttribute("ShipQuantity")!=null?currentRow.getAttribute("ShipQuantity").toString():"0")/2;
+        float shipQty;
+        long schNuum_old=0;
+        long schNuum_new=0;
+      float Qty=currentRow.getAttribute("ShipQuantity")!=null ? Float.parseFloat(currentRow.getAttribute("ShipQuantity").toString()):0;
+      long seqnum=currentRow.getAttribute("ScheduleNumber")!=null ? Long.parseLong(currentRow.getAttribute("ScheduleNumber").toString()):0;
+      System.err.println("=++schedule Number++==="+seqnum);
+      long Count=shipVO.getEstimatedRowCount();
+      System.out.println("====++COUNT++===="+Count);
+      if(Qty >0) {
+        shipQty=Qty/2;
+      }
+      else {
+          shipQty=0;  
+      }
+      
+      if(Count>0){
+          schNuum_new =Count+1;
+          
       System.err.println("Dividing shipQty"+shipQty);  
       currentRow.setAttribute("ShipQuantity", shipQty);
       AdfFacesContext.getCurrentInstance().addPartialTarget(it12);
       
+      System.err.println("===old value======"+schNuum_old);
+      System.err.println("==Count--new======="+schNuum_new);  
+      currentRow.setAttribute("ScheduleNumber", seqnum);
+      AdfFacesContext.getCurrentInstance().addPartialTarget(it3);
+        
       Row newRow=shipVO.createRow();
       newRow.setAttribute("CpoHeaderId", currentRow.getAttribute("CpoHeaderId"));  
       newRow.setAttribute("CpoLineId", currentRow.getAttribute("CpoLineId"));
@@ -19,7 +41,7 @@ Current Row Split in to two
         newRow.setAttribute("Trans_Item", currentRow.getAttribute("Trans_Item"));
         newRow.setAttribute("PoLineId", currentRow.getAttribute("PoLineId"));
         newRow.setAttribute("PoScheduleId", currentRow.getAttribute("PoScheduleId"));
-        newRow.setAttribute("ScheduleNumber", currentRow.getAttribute("ScheduleNumber"));
+        newRow.setAttribute("ScheduleNumber", schNuum_new);
         newRow.setAttribute("ShipToLocationId", currentRow.getAttribute("ShipToLocationId"));
         newRow.setAttribute("ShipToLocationCode", currentRow.getAttribute("ShipToLocationCode"));
         newRow.setAttribute("ShipToOrgId", currentRow.getAttribute("ShipToOrgId"));
@@ -34,6 +56,9 @@ Current Row Split in to two
         newRow.setAttribute("DestinationType", currentRow.getAttribute("DestinationType"));
         newRow.setAttribute("SubinventoryCode", currentRow.getAttribute("SubinventoryCode"));
         newRow.setAttribute("IdentityFlag", currentRow.getAttribute("IdentityFlag"));
-       shipVO.insertRow(newRow);
-      
+        shipVO.insertRow(newRow);
+      }else{
+        JSFUtils.addFacesInformationMessage("You can't Schedule No: 1 into 2");
+      }
     }
+    
