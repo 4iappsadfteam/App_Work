@@ -98,7 +98,7 @@ Search:-LOV
                          null);
                         
                       if(searchName!=null){
-                           if(supplierName!=null&&supplierName.startsWith(supplierName)){
+                           if(supplierName!=null&&supplierName.startsWith(searchName)){
                               SupplierList.add(new Supplier(SUPPLIER_ID_Obj,
                               (element.getElementsByTagName("SUPPLIER_NUM").item(0).getTextContent() !=
                               null ?
