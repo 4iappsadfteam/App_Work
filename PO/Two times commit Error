@@ -1,0 +1,36 @@
+
+Two times commit operation: Two many primary key
+
+
+
+********************************************************************************************************
+ DCIteratorBinding dcIterator = ADFUtils.findIterator("XxemsCustPoHeaders_VO2Iterator");
+        Key parentKey = dcIterator.getCurrentRow().getKey();
+        headVo.executeQuery();
+        dcIterator.setCurrentRowWithKey(parentKey.toStringFormat(true));
+
+********************************************************************************************************
+    public void onClickSubmit(ActionEvent actionEvent) {
+        float totalLineAmount = 0;
+        RowSetIterator rs = lineVo.createRowSet(null);
+        while (rs.hasNext()) {
+            Row r = rs.next();
+            float amount =
+                Float.parseFloat(r.getAttribute("Trans_Amount").toString());
+            totalLineAmount += amount;
+        }
+        System.err.println("===Total Line Amount Details===" +
+                           totalLineAmount);
+        headVo.getCurrentRow().setAttribute("PoAmount", totalLineAmount);
+        System.out.println("=====PO Amount=====" +
+                           headVo.getCurrentRow().getAttribute("PoAmount"));
+        ADFUtils.invokeEL("#{bindings.commit.execute}");
+        DCIteratorBinding dcIterator = ADFUtils.findIterator("XxemsCustPoHeaders_VO2Iterator");
+        Key parentKey = dcIterator.getCurrentRow().getKey();
+        headVo.executeQuery();
+        dcIterator.setCurrentRowWithKey(parentKey.toStringFormat(true));
+        
+        JSFUtils.addFacesInformationMessage("Purchase Order details saved successfully");
+        this.cb5.setRendered(Boolean.TRUE);
+        AdfFacesContext.getCurrentInstance().addPartialTarget(cb5);
+    }
