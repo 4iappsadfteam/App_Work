@@ -124,7 +124,21 @@ Search:-LOV
     }
 
 *********************************************************************************
-
+If Two parameter to filter:
 	
-	
+if(code!=null || desc!=null){
+	if(Code_obj!=null&&Code_obj.startsWith(code) && desc_obj!=null&&desc_obj.startsWith(desc)){
+        desList.add(new DestinationType(Code_obj,
+        (element.getElementsByTagName("MEANING").item(0).getTextContent() !=
+        null ?
+        element.getElementsByTagName("MEANING").item(0).getTextContent().toString() :
+        null),desc_obj));  
+        }
+    }else{
+       desList.add(new DestinationType(Code_obj,
+       (element.getElementsByTagName("MEANING").item(0).getTextContent() !=
+       null ?
+       element.getElementsByTagName("MEANING").item(0).getTextContent().toString() :
+       null),desc_obj));
+       }
 	
