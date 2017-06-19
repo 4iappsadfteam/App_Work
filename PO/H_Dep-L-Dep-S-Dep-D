@@ -1,0 +1,49 @@
+header
+|
+|>>Line
+    |
+    |>>Shipment
+          |
+          |>>Distrib
+
+
+
+                public void onLICk(ActionEvent actionEvent) {
+       ViewObject headerVO =
+           ADFUtils.findIterator("Header_ROVO1Iterator").getViewObject();
+       ViewObject lineVO =
+           ADFUtils.findIterator("Lines_ROVO1Iterator").getViewObject();
+       ViewObject schVO =
+           ADFUtils.findIterator("Sch_ROVO1Iterator").getViewObject();
+       ViewObject distVO =
+           ADFUtils.findIterator("Dist_ROVO1Iterator").getViewObject();
+       headerVO.setNamedWhereClauseParam("p_header_id", "1000521");
+       headerVO.executeQuery();
+       RowSetIterator rs = headerVO.createRowSetIterator(null);
+       while (rs.hasNext()) {
+           Row r = rs.next();
+           System.err.println("===Header===" + r.getAttribute("CpoHeaderId"));
+           //            lineVO.executeQuery();
+           RowSetIterator lineRS = lineVO.createRowSetIterator(null);
+           while (lineRS.hasNext()) {
+               Row r1 = lineRS.next();
+               System.err.println("============Line===" +
+                                  r1.getAttribute("CpoLineId"));
+               lineVO.setCurrentRow(r1);
+               schVO.executeQuery();
+               RowSetIterator schRS = schVO.createRowSetIterator(null);
+               while (schRS.hasNext()) {
+                   Row r2 = schRS.next();
+                   System.err.println("=======================SCH===" +
+                                      r2.getAttribute("CpoScheduleId"));
+                   schVO.setCurrentRow(r2);
+                   distVO.executeQuery();
+                   RowSetIterator disRS = distVO.createRowSetIterator(null);
+                   while (disRS.hasNext()) {
+                       Row r3 = disRS.next();
+                       System.err.println("===================================DIST===" +
+                                          r3.getAttribute("CpoLineDistId"));
+                   }
+               }
+           }
+       }
