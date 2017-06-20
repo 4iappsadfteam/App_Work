@@ -1,0 +1,14 @@
+Step 1: POJO class (Bank)
+Step 2: BI Java Class 
+          path
+          list
+          call xml data's
+          
+Step 3:  Compare (Duplicate check)
+
+Step 4: Create WSDL
+            project new- webservices proxy
+              a. url
+              b. package name
+              c. don't generate
+              
