@@ -12,3 +12,2477 @@ Step 4: Create WSDL
               b. package name
               c. don't generate
               
+******************************************************************************
+
+package po.fusion.model.java;
+
+import bi.po.edis.PublicReportService;
+import bi.po.edis.PublicReportServiceService;
+import bi.po.edis.types.ArrayOfParamNameValue;
+import bi.po.edis.types.ArrayOfString;
+import bi.po.edis.types.ParamNameValue;
+import bi.po.edis.types.ReportRequest;
+import bi.po.edis.types.ReportResponse;
+import bi.po.edis.types.ScheduleRequest;
+
+import java.io.StringReader;
+
+import java.text.SimpleDateFormat;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+
+import java.util.Map;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import oracle.adf.share.ADFContext;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import org.xml.sax.InputSource;
+
+import po.fusion.model.POJO.BusinessUnit;
+import po.fusion.model.POJO.Buyer;
+import po.fusion.model.POJO.Currency;
+import po.fusion.model.POJO.DestinationType;
+import po.fusion.model.POJO.ExpendOrg;
+import po.fusion.model.POJO.ExpendType;
+import po.fusion.model.POJO.ExpenditureType;
+import po.fusion.model.POJO.GLAccount;
+import po.fusion.model.POJO.GLCodeComb;
+import po.fusion.model.POJO.InvOrg;
+import po.fusion.model.POJO.Item;
+import po.fusion.model.POJO.LegalEntity;
+import po.fusion.model.POJO.Location;
+import po.fusion.model.POJO.Lookup;
+import po.fusion.model.POJO.Organization;
+import po.fusion.model.POJO.POLineType;
+import po.fusion.model.POJO.POStyle;
+import po.fusion.model.POJO.POType;
+import po.fusion.model.POJO.PaymentTerm;
+import po.fusion.model.POJO.ProjectBudget;
+import po.fusion.model.POJO.Projects;
+import po.fusion.model.POJO.SubInventory;
+import po.fusion.model.POJO.Supplier;
+import po.fusion.model.POJO.SupplierSite;
+import po.fusion.model.POJO.Task;
+import po.fusion.model.POJO.UOM;
+
+public class BIService {
+    String userName = "******@.com";
+    String passWord = "******";
+
+    List<BusinessUnit> businessUnitList = new ArrayList();
+    List<POType> poTypeList = new ArrayList();
+    List<LegalEntity> legalEntityList = new ArrayList();
+    List<Supplier> SupplierList = new ArrayList();
+    List<SupplierSite> SupplierSiteList = new ArrayList();
+    List<Buyer> BuyerList = new ArrayList();
+    List<Currency> CurrencyList = new ArrayList();
+    List<PaymentTerm> PaymentTermList = new ArrayList();
+    List<Lookup> lookupList = new ArrayList();
+    List<Location> locationList = new ArrayList();
+    List<Projects> projectList = new ArrayList();
+    List<Task> taskList = new ArrayList();
+    List<SubInventory> subInvList = new ArrayList();
+    List<POLineType> poLineTypeList = new ArrayList();
+    List<POStyle> poStyleList = new ArrayList();
+    List<ExpendOrg> expendOrgList = new ArrayList();
+    List<ExpendType> expendTypeList = new ArrayList();
+    List<InvOrg> invOrgList = new ArrayList();
+    List<Item> itemList = new ArrayList();
+    List<UOM> UOMList = new ArrayList();
+    List<ExpenditureType> expendList = new ArrayList();
+    List<Organization> orgList = new ArrayList();
+    List<DestinationType> desList = new ArrayList();
+    List<GLCodeComb> glCodeComb = new ArrayList();
+
+
+    //    String legalEntityPath = "/Custom/PO Custom/Reports/Legal Entity.xdo";
+    String businessUnitPath = "/Custom/PO Custom/Reports/Business Unit.xdo";
+    String SupplierListPath = "/Custom/PO Custom/Reports/Supplier.xdo";
+    String SupplierSitePath = "/Custom/PO Custom/Reports/Supplier Site.xdo";
+    String BuyerPath = "/Custom/PO Custom/Reports/Buyer.xdo";
+    String CurrencyPath = "/Custom/PO Custom/Reports/Currency.xdo";
+    String PaymentTermPath = "/Custom/PO Custom/Reports/Payment Term.xdo";
+    String lookupPath = "/Custom/PO Custom/Reports/Lookup.xdo";
+    String locationPath = "/Custom/PO Custom/Reports/Ship To Location.xdo";
+    String poTypePath = "/Custom/PO Custom/Reports/PO Type.xdo";
+    //    String billPath = "/Custom/PO Custom/Reports/Bill To Location.xdo";
+
+    String invOrgPath = "/Custom/PO Custom/Reports/Inventory Organization.xdo";
+    String itemPath = "/Custom/PO Custom/Reports/Item.xdo";
+    String UomPath = "/Custom/PO Custom/Reports/UOM.xdo";
+    String projectPath = "/Custom/PO Custom/Reports/Project.xdo";
+    String taskPath = "/Custom/PO Custom/Reports/Task.xdo";
+    String poLineTypePath = "/Custom/PO Custom/Reports/PO Line Type.xdo";
+
+    String descTypePath = "/Custom/PO Custom/Reports/Destination Type.xdo";
+    String orgPath = "/Custom/PO Custom/Reports/Inventory Organization.xdo";
+
+    String expenPath = "/Custom/PO Custom/Reports/Expenditure Type.xdo";
+    
+    String glCodeCombPath = "/Custom/PO Custom/Reports/GL Code Combination.xdo";
+    
+    String subInvPath = "/Custom/PO Custom/Reports/Business Unit.xdo";
+    String poStylePath = "/Custom/PO Custom/Reports/Business Unit.xdo";
+    String expendOrgPath = "/Custom/PO Custom/Reports/Business Unit.xdo";
+    String expendTypePath = "/Custom/PO Custom/Reports/Business Unit.xdo";
+
+
+    List<GLAccount> gLAccountList = new ArrayList();
+    List<ProjectBudget> projectBudgetList = new ArrayList();
+
+    String gLAccountPath = "/Custom/PO Custom/Reports/Business Unit.xdo";
+    String projectBudgetPath = "/Custom/PO Custom/Reports/Project Budget.xdo";
+
+    public BIService() {
+        super();
+    }
+
+    //****************************BusinessUnit*****************************************************//
+
+    public List<BusinessUnit> populateBusinessUnit(String searchBU, String searchLegal) {
+        String str = null;
+        ScheduleRequest sreq = new ScheduleRequest();
+        PublicReportServiceService publicReportServiceService =
+            new PublicReportServiceService();
+        PublicReportService publicReportService =
+            publicReportServiceService.getPublicReportService();
+        ReportRequest reportRequest = new ReportRequest();
+        reportRequest.setAttributeFormat("xml");
+        reportRequest.setAttributeLocale("en-US");
+        reportRequest.setAttributeTemplate("Simple");
+        reportRequest.setByPassCache(true);
+        reportRequest.setSizeOfDataChunkDownload(-1);
+        reportRequest.setReportAbsolutePath(businessUnitPath);
+        reportRequest.setParameterNameValues(null);
+        sreq.setReportRequest(reportRequest);
+        sreq.setSaveDataOption(true);
+        sreq.setScheduleBurstringOption(false);
+        sreq.setSchedulePublicOption(true);
+        sreq.setUserJobName("TEST");
+        try {
+            ReportResponse response = new ReportResponse();
+            response =
+                    publicReportService.runReport(reportRequest, userName, passWord);
+            str = response.getReportBytesAsString();
+            System.err.println("====BZU===="+str);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            DocumentBuilder db =
+                DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            InputSource is = new InputSource();
+            is.setCharacterStream(new StringReader(str));
+            Document doc = db.parse(is);
+            NodeList nodes = doc.getElementsByTagName("G_1");
+            for (int i = 0; i < nodes.getLength(); i++) {
+                Node nNode = nodes.item(i);
+                if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+                    Element element = (Element)nNode;
+                    Long BU_ID_Obj;
+                    if (element.getElementsByTagName("BU_ID").item(0).getChildNodes().getLength() >
+                        0) {
+                        BU_ID_Obj =
+                                Long.valueOf(element.getElementsByTagName("BU_ID").item(0).getTextContent().toString());
+                    } else {
+                        BU_ID_Obj = null;
+
+                    }
+                    Long LE_ID_Obj;
+                    if (element.getElementsByTagName("LE_ID").item(0).getChildNodes().getLength() >
+                        0) {
+                        LE_ID_Obj =
+                                Long.valueOf(element.getElementsByTagName("LE_ID").item(0).getTextContent().toString());
+                    } else {
+                        LE_ID_Obj = null;
+
+                    }
+                  
+                  String buname_obj=(element.getElementsByTagName("BU_NAME").item(0).getTextContent() !=
+                                    null ?
+                                    element.getElementsByTagName("BU_NAME").item(0).getTextContent().toString() :
+                                    null);
+                  String leg_obj=(element.getElementsByTagName("LE_NAME").item(0).getTextContent() !=
+                                 null ?
+                                 element.getElementsByTagName("LE_NAME").item(0).getTextContent().toString() :
+                                 null);
+                  
+                  if(searchBU!=null||searchLegal!=null){
+                      if(buname_obj!=null&&buname_obj.startsWith(searchBU)&&leg_obj!=null&&leg_obj.startsWith(searchLegal)){
+                          businessUnitList.add(new BusinessUnit(BU_ID_Obj,buname_obj, LE_ID_Obj,leg_obj));  
+                      }
+                  }else{
+                      businessUnitList.add(new BusinessUnit(BU_ID_Obj,buname_obj, LE_ID_Obj,leg_obj));  
+                  }
+                  
+                    
+                    
+
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("===BusinessUnit===" + e);
+        }
+        return businessUnitList;
+    }
+
+    //****************************PO Type*****************************************************//
+
+    public List<POType> populatePOType() {
+
+        String str = null;
+        ScheduleRequest sreq = new ScheduleRequest();
+        PublicReportServiceService publicReportServiceService =
+            new PublicReportServiceService();
+        PublicReportService publicReportService =
+            publicReportServiceService.getPublicReportService();
+        ReportRequest reportRequest = new ReportRequest();
+        reportRequest.setAttributeFormat("xml");
+        reportRequest.setAttributeLocale("en-US");
+        reportRequest.setAttributeTemplate("Simple");
+        reportRequest.setByPassCache(true);
+        reportRequest.setSizeOfDataChunkDownload(-1);
+        reportRequest.setReportAbsolutePath(poTypePath);
+        reportRequest.setParameterNameValues(null);
+        sreq.setReportRequest(reportRequest);
+        sreq.setSaveDataOption(true);
+        sreq.setScheduleBurstringOption(false);
+        sreq.setSchedulePublicOption(true);
+        sreq.setUserJobName("TEST");
+        try {
+            ReportResponse response = new ReportResponse();
+            response =
+                    publicReportService.runReport(reportRequest, userName, passWord);
+            str = response.getReportBytesAsString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            DocumentBuilder db =
+                DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            InputSource is = new InputSource();
+            is.setCharacterStream(new StringReader(str));
+            Document doc = db.parse(is);
+            NodeList nodes = doc.getElementsByTagName("G_1");
+            for (int i = 0; i < nodes.getLength(); i++) {
+                Node nNode = nodes.item(i);
+                if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+                    Element element = (Element)nNode;
+                    poTypeList.add(new POType((element.getElementsByTagName("TYPE_NAME").item(0).getTextContent() !=
+                                               null ?
+                                               element.getElementsByTagName("TYPE_NAME").item(0).getTextContent().toString() :
+                                               null),
+                                              (element.getElementsByTagName("TYPE_DESC").item(0).getTextContent() !=
+                                               null ?
+                                               element.getElementsByTagName("TYPE_DESC").item(0).getTextContent().toString() :
+                                               null)));
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("===BusinessUnit===" + e);
+        }
+        return poTypeList;
+    }
+
+    //****************************Supplier*****************************************************//
+
+    public List<Supplier> populateSupplier(String searchName) {
+        if (ADFContext.getCurrent().getPageFlowScope().get("BU_IDS") != null) {
+            String str = null;
+            ScheduleRequest sreq = new ScheduleRequest();
+            PublicReportServiceService publicReportServiceService =
+                new PublicReportServiceService();
+            PublicReportService publicReportService =
+                publicReportServiceService.getPublicReportService();
+            ReportRequest reportRequest = new ReportRequest();
+            reportRequest.setAttributeFormat("xml");
+            reportRequest.setAttributeLocale("en-US");
+            reportRequest.setAttributeTemplate("Simple");
+            reportRequest.setByPassCache(true);
+            reportRequest.setSizeOfDataChunkDownload(-1);
+            reportRequest.setReportAbsolutePath(SupplierListPath);
+            ArrayOfParamNameValue pNameValue = new ArrayOfParamNameValue();
+
+            ParamNameValue nameValue1 = new ParamNameValue();
+            nameValue1.setName("p_supplier_name");
+            ArrayOfString aos1 = new ArrayOfString();
+            aos1.getItem().add(searchName);
+            nameValue1.setValues(aos1);
+            pNameValue.getItem().add(nameValue1);
+
+
+            ParamNameValue nameValue = new ParamNameValue();
+            nameValue.setName("p_bu_id");
+            ArrayOfString aos = new ArrayOfString();
+            aos.getItem().add(ADFContext.getCurrent().getPageFlowScope().get("BU_IDS").toString());
+            nameValue.setValues(aos);
+            pNameValue.getItem().add(nameValue);
+            reportRequest.setParameterNameValues(pNameValue);
+            sreq.setReportRequest(reportRequest);
+            sreq.setSaveDataOption(true);
+            sreq.setScheduleBurstringOption(false);
+            sreq.setSchedulePublicOption(true);
+            sreq.setUserJobName("TEST");
+            try {
+                ReportResponse response = new ReportResponse();
+                response =
+                        publicReportService.runReport(reportRequest, userName,
+                                                      passWord);
+                str = response.getReportBytesAsString();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                DocumentBuilder db =
+                    DocumentBuilderFactory.newInstance().newDocumentBuilder();
+                InputSource is = new InputSource();
+                is.setCharacterStream(new StringReader(str));
+                Document doc = db.parse(is);
+                NodeList nodes = doc.getElementsByTagName("G_1");
+                for (int i = 0; i < nodes.getLength(); i++) {
+                    Node nNode = nodes.item(i);
+                    if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+                        Element element = (Element)nNode;
+                        Long SUPPLIER_ID_Obj;
+                        if (element.getElementsByTagName("SUPPLIER_ID").item(0).getChildNodes().getLength() >
+                            0) {
+                            SUPPLIER_ID_Obj =
+                                    Long.valueOf(element.getElementsByTagName("SUPPLIER_ID").item(0).getTextContent().toString());
+                        } else {
+                            SUPPLIER_ID_Obj = null;
+                        }
+
+                        String supplierName =
+                            (element.getElementsByTagName("SUPPLIER_NAME").item(0).getTextContent() !=
+                             null ?
+                             element.getElementsByTagName("SUPPLIER_NAME").item(0).getTextContent().toString() :
+                             null);
+
+                        //                      if(searchName!=null){
+                        //                           if(supplierName!=null&&supplierName.startsWith(searchName)){
+                        //                              SupplierList.add(new Supplier(SUPPLIER_ID_Obj,
+                        //                              (element.getElementsByTagName("SUPPLIER_NUM").item(0).getTextContent() !=
+                        //                              null ?
+                        //                              element.getElementsByTagName("SUPPLIER_NUM").item(0).getTextContent().toString() :
+                        //                              null), supplierName, null, null));
+                        //                            }
+                        //
+                        //                        }else{
+                        SupplierList.add(new Supplier(SUPPLIER_ID_Obj,
+                                                      (element.getElementsByTagName("SUPPLIER_NUM").item(0).getTextContent() !=
+                                                       null ?
+                                                       element.getElementsByTagName("SUPPLIER_NUM").item(0).getTextContent().toString() :
+                                                       null), supplierName,
+                                                      null, null));
+                        //                        }
+                    }
+                }
+            } catch (Exception e) {
+                System.err.println("===SupplierUnit===" + e);
+            }
+        }
+        return SupplierList;
+
+    }
+
+    //****************************SupplierSite*****************************************************//
+
+    public List<SupplierSite> populateSupplierSite(String searchSupplier) {
+        if (ADFContext.getCurrent().getPageFlowScope().get("BU_IDS") != null &&
+            ADFContext.getCurrent().getPageFlowScope().get("SUPP_ID") !=
+            null) {
+            String str = null;
+            ScheduleRequest sreq = new ScheduleRequest();
+            PublicReportServiceService publicReportServiceService =
+                new PublicReportServiceService();
+            PublicReportService publicReportService =
+                publicReportServiceService.getPublicReportService();
+            ReportRequest reportRequest = new ReportRequest();
+            reportRequest.setAttributeFormat("xml");
+            reportRequest.setAttributeLocale("en-US");
+            reportRequest.setAttributeTemplate("Simple");
+            reportRequest.setByPassCache(true);
+            reportRequest.setSizeOfDataChunkDownload(-1);
+            reportRequest.setReportAbsolutePath(SupplierSitePath);
+
+            ArrayOfParamNameValue pNameValue = new ArrayOfParamNameValue();
+            ParamNameValue nameValue = new ParamNameValue();
+            nameValue.setName("p_bu_id");
+            ArrayOfString aos = new ArrayOfString();
+            aos.getItem().add(ADFContext.getCurrent().getPageFlowScope().get("BU_IDS").toString());
+            nameValue.setValues(aos);
+            pNameValue.getItem().add(nameValue);
+
+            ParamNameValue nameValue1 = new ParamNameValue();
+            nameValue1.setName("p_vendor_id");
+            ArrayOfString aos1 = new ArrayOfString();
+            aos1.getItem().add(ADFContext.getCurrent().getPageFlowScope().get("SUPP_ID").toString());
+            nameValue1.setValues(aos1);
+            pNameValue.getItem().add(nameValue1);
+            reportRequest.setParameterNameValues(pNameValue);
+
+            sreq.setReportRequest(reportRequest);
+            sreq.setSaveDataOption(true);
+            sreq.setScheduleBurstringOption(false);
+            sreq.setSchedulePublicOption(true);
+            sreq.setUserJobName("TEST");
+            try {
+                ReportResponse response = new ReportResponse();
+                response =
+                        publicReportService.runReport(reportRequest, userName,
+                                                      passWord);
+                str = response.getReportBytesAsString();
+                System.err.println("===Site===" + str);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                DocumentBuilder db =
+                    DocumentBuilderFactory.newInstance().newDocumentBuilder();
+                InputSource is = new InputSource();
+                is.setCharacterStream(new StringReader(str));
+                Document doc = db.parse(is);
+                NodeList nodes = doc.getElementsByTagName("G_1");
+                for (int i = 0; i < nodes.getLength(); i++) {
+                    Node nNode = nodes.item(i);
+                    if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+                        Element element = (Element)nNode;
+
+                        Long SUPPLIER_SITE_ID_Obj;
+                        if (element.getElementsByTagName("SUPPLIER_SITE_ID").item(0).getChildNodes().getLength() >
+                            0) {
+                            SUPPLIER_SITE_ID_Obj =
+                                    Long.valueOf(element.getElementsByTagName("SUPPLIER_SITE_ID").item(0).getTextContent().toString());
+                        } else {
+                            SUPPLIER_SITE_ID_Obj = null;
+                        }
+                        Long SUPPLIER_CONTACT_ID_Obj;
+                        if (element.getElementsByTagName("SUPPLIER_CONTACT_ID").item(0).getChildNodes().getLength() >
+                            0) {
+                            SUPPLIER_CONTACT_ID_Obj =
+                                    Long.valueOf(element.getElementsByTagName("SUPPLIER_CONTACT_ID").item(0).getTextContent().toString());
+                        } else {
+                            SUPPLIER_CONTACT_ID_Obj = null;
+                        }
+                        
+                        String searchSupp_obj=(element.getElementsByTagName("SUPPLIER_SITE_CODE").item(0).getTextContent() !=
+                                             null ?
+                                             element.getElementsByTagName("SUPPLIER_SITE_CODE").item(0).getTextContent().toString() :
+                                             null);
+                        if(searchSupplier!=null){
+                            if(searchSupp_obj!=null&&searchSupp_obj.startsWith(searchSupplier)){
+                                SupplierSiteList.add(new SupplierSite(SUPPLIER_SITE_ID_Obj,
+                                                                      searchSupp_obj, null,
+                                                                      SUPPLIER_CONTACT_ID_Obj,
+                                                                      (element.getElementsByTagName("SUPPLIER_CONTACT_NAME").item(0).getTextContent() !=
+                                                                       null ?
+                                                                       element.getElementsByTagName("SUPPLIER_CONTACT_NAME").item(0).getTextContent().toString() :
+                                                                       null)));    
+                            }
+                        }else{
+                            SupplierSiteList.add(new SupplierSite(SUPPLIER_SITE_ID_Obj,
+                                                                  searchSupp_obj, null,
+                                                                  SUPPLIER_CONTACT_ID_Obj,
+                                                                  (element.getElementsByTagName("SUPPLIER_CONTACT_NAME").item(0).getTextContent() !=
+                                                                   null ?
+                                                                   element.getElementsByTagName("SUPPLIER_CONTACT_NAME").item(0).getTextContent().toString() :
+                                                                   null)));    
+                        }
+                     }
+                }
+            } catch (Exception e) {
+                System.err.println("===SupplierSite===" + e);
+            }
+        }
+        return SupplierSiteList;
+    }
+
+    //****************************Buyer*****************************************************//
+
+    public List<Buyer> populateBuyer(String searchBuyer) {
+        if (ADFContext.getCurrent().getPageFlowScope().get("BU_IDS") != null) {
+            String str = null;
+            ScheduleRequest sreq = new ScheduleRequest();
+            PublicReportServiceService publicReportServiceService =
+                new PublicReportServiceService();
+            PublicReportService publicReportService =
+                publicReportServiceService.getPublicReportService();
+            ReportRequest reportRequest = new ReportRequest();
+            reportRequest.setAttributeFormat("xml");
+            reportRequest.setAttributeLocale("en-US");
+            reportRequest.setAttributeTemplate("Simple");
+            reportRequest.setByPassCache(true);
+            reportRequest.setSizeOfDataChunkDownload(-1);
+            reportRequest.setReportAbsolutePath(BuyerPath);
+
+            ArrayOfParamNameValue pNameValue = new ArrayOfParamNameValue();
+            ParamNameValue nameValue = new ParamNameValue();
+            nameValue.setName("p_bu_id");
+            ArrayOfString aos = new ArrayOfString();
+            aos.getItem().add(ADFContext.getCurrent().getPageFlowScope().get("BU_IDS").toString());
+            nameValue.setValues(aos);
+            pNameValue.getItem().add(nameValue);
+            reportRequest.setParameterNameValues(pNameValue);
+            sreq.setReportRequest(reportRequest);
+            sreq.setSaveDataOption(true);
+            sreq.setScheduleBurstringOption(false);
+            sreq.setSchedulePublicOption(true);
+            sreq.setUserJobName("TEST");
+            try {
+                ReportResponse response = new ReportResponse();
+                response =
+                        publicReportService.runReport(reportRequest, userName,
+                                                      passWord);
+                str = response.getReportBytesAsString();
+                //                System.err.println("=====BUY===" + str);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                DocumentBuilder db =
+                    DocumentBuilderFactory.newInstance().newDocumentBuilder();
+                InputSource is = new InputSource();
+                is.setCharacterStream(new StringReader(str));
+
+                Document doc = db.parse(is);
+                NodeList nodes = doc.getElementsByTagName("G_1");
+                for (int i = 0; i < nodes.getLength(); i++) {
+                    Node nNode = nodes.item(i);
+                    if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+                        Element element = (Element)nNode;
+                        Long BUYER_ID_Obj;
+                        if (element.getElementsByTagName("BUYER_ID").item(0).getChildNodes().getLength() >
+                            0) {
+                            BUYER_ID_Obj =
+                                    Long.valueOf(element.getElementsByTagName("BUYER_ID").item(0).getTextContent().toString());
+                        } else {
+                            BUYER_ID_Obj = null;
+                        }
+                        Long BU_ID_Obj;
+                        if (element.getElementsByTagName("BU_ID").item(0).getChildNodes().getLength() >
+                            0) {
+                            BU_ID_Obj =
+                                    Long.valueOf(element.getElementsByTagName("BU_ID").item(0).getTextContent().toString());
+                        } else {
+                            BU_ID_Obj = null;
+                        }
+                        
+                        String buyerName=(element.getElementsByTagName("BUYER_NAME").item(0).getTextContent() !=
+                                         null ?
+                                         element.getElementsByTagName("BUYER_NAME").item(0).getTextContent().toString() :
+                                         null);
+                        
+                        if(searchBuyer!=null){
+                            if(buyerName!=null&&buyerName.startsWith(searchBuyer)){
+                                BuyerList.add(new Buyer(BUYER_ID_Obj,buyerName, BU_ID_Obj));    
+                            }
+                        }else{
+                            BuyerList.add(new Buyer(BUYER_ID_Obj,buyerName, BU_ID_Obj));    
+                        }
+                        
+                    }
+                }
+            } catch (Exception e) {
+                System.err.println("===Buyer===" + e);
+            }
+        }
+
+        return BuyerList;
+    }
+
+
+    //****************************Currency*****************************************************//
+
+    public List<Currency> populateCurrency(String searchCurrency) {
+        String str = null;
+        ScheduleRequest sreq = new ScheduleRequest();
+        PublicReportServiceService publicReportServiceService =
+            new PublicReportServiceService();
+        PublicReportService publicReportService =
+            publicReportServiceService.getPublicReportService();
+        ReportRequest reportRequest = new ReportRequest();
+        reportRequest.setAttributeFormat("xml");
+        reportRequest.setAttributeLocale("en-US");
+        reportRequest.setAttributeTemplate("Simple");
+        reportRequest.setByPassCache(true);
+        reportRequest.setSizeOfDataChunkDownload(-1);
+        reportRequest.setReportAbsolutePath(CurrencyPath);
+
+        ArrayOfParamNameValue pNameValue = new ArrayOfParamNameValue();
+
+        ParamNameValue nameValue1 = new ParamNameValue();
+        nameValue1.setName("p_currency_code");
+        ArrayOfString aos1 = new ArrayOfString();
+        aos1.getItem().add(searchCurrency);
+        nameValue1.setValues(aos1);
+        pNameValue.getItem().add(nameValue1);
+
+        reportRequest.setParameterNameValues(pNameValue);
+        sreq.setReportRequest(reportRequest);
+        sreq.setSaveDataOption(true);
+        sreq.setScheduleBurstringOption(false);
+        sreq.setSchedulePublicOption(true);
+        sreq.setUserJobName("TEST");
+        try {
+            ReportResponse response = new ReportResponse();
+            response =
+                    publicReportService.runReport(reportRequest, userName, passWord);
+            str = response.getReportBytesAsString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            DocumentBuilder db =
+                DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            InputSource is = new InputSource();
+            is.setCharacterStream(new StringReader(str));
+
+            Document doc = db.parse(is);
+            NodeList nodes = doc.getElementsByTagName("G_1");
+            for (int i = 0; i < nodes.getLength(); i++) {
+                Node nNode = nodes.item(i);
+                if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+                    Element element = (Element)nNode;
+
+                    String searchCode =
+                        (element.getElementsByTagName("CURRENCY_CODE").item(0).getTextContent() !=
+                         null ?
+                         element.getElementsByTagName("CURRENCY_CODE").item(0).getTextContent().toString() :
+                         null);
+                    //                    if(searchCurrency!=null){
+                    //                        if(searchCode!=null && searchCode.startsWith(searchCurrency)){
+                    //                            CurrencyList.add(new Currency(searchCode, null, null,
+                    //                            (element.getElementsByTagName("CURRENCY_NAME").item(0).getTextContent() !=
+                    //                            null ?
+                    //                            element.getElementsByTagName("CURRENCY_NAME").item(0).getTextContent().toString() :
+                    //                            null)));
+                    //                        }
+                    //                  }else{
+                    CurrencyList.add(new Currency(searchCode, null, null,
+                                                  (element.getElementsByTagName("CURRENCY_NAME").item(0).getTextContent() !=
+                                                   null ?
+                                                   element.getElementsByTagName("CURRENCY_NAME").item(0).getTextContent().toString() :
+                                                   null)));
+                    // }
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("===Currency===" + e);
+        }
+        return CurrencyList;
+    }
+
+
+    //****************************PaymentTerm*****************************************************//
+
+    public List<PaymentTerm> populatePaymentTerm() {
+        String str = null;
+        ScheduleRequest sreq = new ScheduleRequest();
+        PublicReportServiceService publicReportServiceService =
+            new PublicReportServiceService();
+        PublicReportService publicReportService =
+            publicReportServiceService.getPublicReportService();
+        ReportRequest reportRequest = new ReportRequest();
+        reportRequest.setAttributeFormat("xml");
+        reportRequest.setAttributeLocale("en-US");
+        reportRequest.setAttributeTemplate("Simple");
+        reportRequest.setByPassCache(true);
+        reportRequest.setSizeOfDataChunkDownload(-1);
+        reportRequest.setReportAbsolutePath(PaymentTermPath);
+        reportRequest.setParameterNameValues(null);
+        sreq.setReportRequest(reportRequest);
+        sreq.setSaveDataOption(true);
+        sreq.setScheduleBurstringOption(false);
+        sreq.setSchedulePublicOption(true);
+        sreq.setUserJobName("TEST");
+        try {
+            ReportResponse response = new ReportResponse();
+            response =
+                    publicReportService.runReport(reportRequest, userName, passWord);
+            str = response.getReportBytesAsString();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            DocumentBuilder db =
+                DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            InputSource is = new InputSource();
+            is.setCharacterStream(new StringReader(str));
+            Document doc = db.parse(is);
+            NodeList nodes = doc.getElementsByTagName("G_1");
+            for (int i = 0; i < nodes.getLength(); i++) {
+                Node nNode = nodes.item(i);
+                if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+                    Element element = (Element)nNode;
+
+                    Long TERM_ID_Obj;
+                    if (element.getElementsByTagName("TERM_ID").item(0).getChildNodes().getLength() >
+                        0) {
+                        TERM_ID_Obj =
+                                Long.valueOf(element.getElementsByTagName("TERM_ID").item(0).getTextContent().toString());
+                    } else {
+                        TERM_ID_Obj = null;
+
+                    }
+                    PaymentTermList.add(new PaymentTerm(TERM_ID_Obj,
+                                                        (element.getElementsByTagName("TERM_NAME").item(0).getTextContent() !=
+                                                         null ?
+                                                         element.getElementsByTagName("TERM_NAME").item(0).getTextContent().toString() :
+                                                         null),
+                                                        (element.getElementsByTagName("TERM_DESCRIPTION").item(0).getTextContent() !=
+                                                         null ?
+                                                         element.getElementsByTagName("TERM_DESCRIPTION").item(0).getTextContent().toString() :
+                                                         null)));
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("===PaymentTerm===" + e);
+        }
+        return PaymentTermList;
+    }
+
+
+    //****************************Lookup*****************************************************//
+
+    public List<Lookup> populateLookup() {
+        String str = null;
+        ScheduleRequest sreq = new ScheduleRequest();
+        PublicReportServiceService publicReportServiceService =
+            new PublicReportServiceService();
+        PublicReportService publicReportService =
+            publicReportServiceService.getPublicReportService();
+        ReportRequest reportRequest = new ReportRequest();
+        reportRequest.setAttributeFormat("xml");
+        reportRequest.setAttributeLocale("en-US");
+        reportRequest.setAttributeTemplate("Simple");
+        reportRequest.setByPassCache(true);
+        reportRequest.setSizeOfDataChunkDownload(-1);
+        reportRequest.setReportAbsolutePath(lookupPath);
+        //        ArrayOfParamNameValue pNameValue = new ArrayOfParamNameValue();
+        //        ParamNameValue nameValue = new ParamNameValue();
+        //        nameValue.setName("P_LOOKUP_TYPE");
+        //        ArrayOfString aos = new ArrayOfString();
+        //        aos.getItem().add("FOB");
+        //        nameValue.setValues(aos);
+        //        pNameValue.getItem().add(nameValue);
+        //        ParamNameValue nameValue1 = new ParamNameValue();
+        //        nameValue1.setName("P_EFFECTIVE_DATE");
+        //        ArrayOfString aos1 = new ArrayOfString();
+        //        aos1.getItem().add(null);
+        //        nameValue1.setValues(aos1);
+        //        pNameValue.getItem().add(nameValue1);
+        reportRequest.setParameterNameValues(null);
+        sreq.setReportRequest(reportRequest);
+        sreq.setSaveDataOption(true);
+        sreq.setScheduleBurstringOption(false);
+        sreq.setSchedulePublicOption(true);
+        sreq.setUserJobName("TEST");
+        try {
+            ReportResponse response = new ReportResponse();
+            response =
+                    publicReportService.runReport(reportRequest, userName, passWord);
+            str = response.getReportBytesAsString();
+            //            System.err.println("populateBusinessUnit ***-" + str);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            DocumentBuilder db =
+                DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            InputSource is = new InputSource();
+            is.setCharacterStream(new StringReader(str));
+            Document doc = db.parse(is);
+            NodeList nodes = doc.getElementsByTagName("G_1");
+            for (int i = 0; i < nodes.getLength(); i++) {
+                Node nNode = nodes.item(i);
+                if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+                    Element element = (Element)nNode;
+                    lookupList.add(new Lookup((element.getElementsByTagName("CODE").item(0).getTextContent() !=
+                                               null ?
+                                               element.getElementsByTagName("CODE").item(0).getTextContent().toString() :
+                                               null),
+                                              (element.getElementsByTagName("MEANING").item(0).getTextContent() !=
+                                               null ?
+                                               element.getElementsByTagName("MEANING").item(0).getTextContent().toString() :
+                                               null)));
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("===Lookup===" + e);
+        }
+        return lookupList;
+    }
+
+    //****************************Location*****************************************************//
+
+    public List<Location> populateLocation(String searchLName) {
+        if (ADFContext.getCurrent().getPageFlowScope().get("BU_IDS") != null) {
+            String str = null;
+            ScheduleRequest sreq = new ScheduleRequest();
+            PublicReportServiceService publicReportServiceService =
+                new PublicReportServiceService();
+            PublicReportService publicReportService =
+                publicReportServiceService.getPublicReportService();
+            ReportRequest reportRequest = new ReportRequest();
+            reportRequest.setAttributeFormat("xml");
+            reportRequest.setAttributeLocale("en-US");
+            reportRequest.setAttributeTemplate("Simple");
+            reportRequest.setByPassCache(true);
+            reportRequest.setSizeOfDataChunkDownload(-1);
+            reportRequest.setReportAbsolutePath(locationPath);
+            ArrayOfParamNameValue pNameValue = new ArrayOfParamNameValue();
+            ParamNameValue nameValue = new ParamNameValue();
+            nameValue.setName("p_bu_id");
+            ArrayOfString aos = new ArrayOfString();
+            aos.getItem().add(ADFContext.getCurrent().getPageFlowScope().get("BU_IDS").toString());
+            nameValue.setValues(aos);
+            pNameValue.getItem().add(nameValue);
+            reportRequest.setParameterNameValues(pNameValue);
+            sreq.setReportRequest(reportRequest);
+            sreq.setSaveDataOption(true);
+            sreq.setScheduleBurstringOption(false);
+            sreq.setSchedulePublicOption(true);
+            sreq.setUserJobName("TEST");
+            try {
+                ReportResponse response = new ReportResponse();
+                response =
+                        publicReportService.runReport(reportRequest, userName,
+                                                      passWord);
+                str = response.getReportBytesAsString();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            try {
+                DocumentBuilder db =
+                    DocumentBuilderFactory.newInstance().newDocumentBuilder();
+                InputSource is = new InputSource();
+                is.setCharacterStream(new StringReader(str));
+
+                Document doc = db.parse(is);
+                NodeList nodes = doc.getElementsByTagName("G_1");
+                for (int i = 0; i < nodes.getLength(); i++) {
+                    Node nNode = nodes.item(i);
+                    if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+                        Element element = (Element)nNode;
+                        Long LOCATION_ID_Obj;
+                        if (element.getElementsByTagName("LOCATION_ID").item(0).getChildNodes().getLength() >
+                            0) {
+                            LOCATION_ID_Obj =
+                                    Long.valueOf(element.getElementsByTagName("LOCATION_ID").item(0).getTextContent().toString());
+                        } else {
+                            LOCATION_ID_Obj = null;
+
+                        }
+
+                      String lname_obj= (element.getElementsByTagName("LOCATION_NAME").item(0).getTextContent() !=
+                                        null ?
+                                        element.getElementsByTagName("LOCATION_NAME").item(0).getTextContent().toString() :
+                                         null);  
+                      if(searchLName!=null){
+                          if(lname_obj!=null&&lname_obj.startsWith(searchLName)){
+                              locationList.add(new Location(LOCATION_ID_Obj,lname_obj));  
+                          }
+                      }else{
+                          locationList.add(new Location(LOCATION_ID_Obj,lname_obj));  
+                      }
+                      }
+                }
+            } catch (Exception e) {
+                System.err.println("===LocationUnit===" + e);
+            }
+        }
+
+        return locationList;
+    }
+
+    //****************************Projects*****************************************************//
+    //
+
+    public List<Projects> populateProjects(String pNumber, String pDesc) {
+        if (ADFContext.getCurrent().getPageFlowScope().get("BU_IDS") != null) {
+
+            String str = null;
+            ScheduleRequest sreq = new ScheduleRequest();
+            PublicReportServiceService publicReportServiceService =
+                new PublicReportServiceService();
+            PublicReportService publicReportService =
+                publicReportServiceService.getPublicReportService();
+            ReportRequest reportRequest = new ReportRequest();
+            reportRequest.setAttributeFormat("xml");
+            reportRequest.setAttributeLocale("en-US");
+            reportRequest.setAttributeTemplate("Simple");
+            reportRequest.setByPassCache(true);
+            reportRequest.setSizeOfDataChunkDownload(-1);
+            reportRequest.setReportAbsolutePath(projectPath);
+            ArrayOfParamNameValue pNameValue = new ArrayOfParamNameValue();
+
+            ParamNameValue nameValue = new ParamNameValue();
+            nameValue.setName("p_bu_id");
+            ArrayOfString aos = new ArrayOfString();
+            aos.getItem().add(ADFContext.getCurrent().getPageFlowScope().get("BU_IDS").toString());
+            nameValue.setValues(aos);
+            pNameValue.getItem().add(nameValue);
+
+
+            ParamNameValue nameValue1 = new ParamNameValue();
+            nameValue1.setName("p_project_no");
+            ArrayOfString aos1 = new ArrayOfString();
+            aos1.getItem().add(pNumber);
+            nameValue1.setValues(aos1);
+            pNameValue.getItem().add(nameValue1);
+
+
+            ParamNameValue nameValue2 = new ParamNameValue();
+            nameValue2.setName("p_project_name");
+            ArrayOfString aos2 = new ArrayOfString();
+            aos2.getItem().add(pDesc);
+            nameValue2.setValues(aos2);
+            pNameValue.getItem().add(nameValue2);
+
+            reportRequest.setParameterNameValues(pNameValue);
+            sreq.setReportRequest(reportRequest);
+            sreq.setSaveDataOption(true);
+            sreq.setScheduleBurstringOption(false);
+            sreq.setSchedulePublicOption(true);
+            sreq.setUserJobName("TEST");
+            try {
+                ReportResponse response = new ReportResponse();
+                response =
+                        publicReportService.runReport(reportRequest, userName,
+                                                      passWord);
+                str = response.getReportBytesAsString();
+                //                        System.err.println("====PRO====" + str);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                DocumentBuilder db =
+                    DocumentBuilderFactory.newInstance().newDocumentBuilder();
+                InputSource is = new InputSource();
+                is.setCharacterStream(new StringReader(str));
+                Document doc = db.parse(is);
+                NodeList nodes = doc.getElementsByTagName("G_1");
+                for (int i = 0; i < nodes.getLength(); i++) {
+                    Node nNode = nodes.item(i);
+                    if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+                        Element element = (Element)nNode;
+                        Long PROJECT_ID_Obj;
+
+                        if (element.getElementsByTagName("PROJECT_ID").item(0).getChildNodes().getLength() >
+                            0) {
+                            PROJECT_ID_Obj =
+                                    Long.valueOf(element.getElementsByTagName("PROJECT_ID").item(0).getTextContent().toString());
+                        } else {
+                            PROJECT_ID_Obj = null;
+
+                        }
+                        projectList.add(new Projects(PROJECT_ID_Obj,
+                                                     (element.getElementsByTagName("PROJECT_NAME").item(0).getTextContent() !=
+                                                      null ?
+                                                      element.getElementsByTagName("PROJECT_NAME").item(0).getTextContent().toString() :
+                                                      null),
+                                                     (element.getElementsByTagName("PROJECT_NUMBER").item(0).getTextContent() !=
+                                                      null ?
+                                                      element.getElementsByTagName("PROJECT_NUMBER").item(0).getTextContent().toString() :
+                                                      null)));
+                    }
+                }
+            } catch (Exception e) {
+                System.err.println("===Projects===" + e);
+            }
+        }
+        return projectList;
+    }
+
+
+    //****************************Task*****************************************************//
+
+    public List<Task> populateTask(String searchTNumber, String searchTName) {
+        if (ADFContext.getCurrent().getPageFlowScope().get("PRO_IDS") !=
+            null) {
+            String str = null;
+            ScheduleRequest sreq = new ScheduleRequest();
+            PublicReportServiceService publicReportServiceService =
+                new PublicReportServiceService();
+            PublicReportService publicReportService =
+                publicReportServiceService.getPublicReportService();
+            ReportRequest reportRequest = new ReportRequest();
+            reportRequest.setAttributeFormat("xml");
+            reportRequest.setAttributeLocale("en-US");
+            reportRequest.setAttributeTemplate("Simple");
+            reportRequest.setByPassCache(true);
+            reportRequest.setSizeOfDataChunkDownload(-1);
+            reportRequest.setReportAbsolutePath(taskPath);
+            ArrayOfParamNameValue pNameValue = new ArrayOfParamNameValue();
+            ParamNameValue nameValue = new ParamNameValue();
+            nameValue.setName("p_project_id");
+            ArrayOfString aos = new ArrayOfString();
+            aos.getItem().add(ADFContext.getCurrent().getPageFlowScope().get("PRO_IDS").toString());
+            nameValue.setValues(aos);
+            pNameValue.getItem().add(nameValue);
+            reportRequest.setParameterNameValues(pNameValue);
+            sreq.setReportRequest(reportRequest);
+            sreq.setSaveDataOption(true);
+            sreq.setScheduleBurstringOption(false);
+            sreq.setSchedulePublicOption(true);
+            sreq.setUserJobName("TEST");
+            try {
+                ReportResponse response = new ReportResponse();
+                response =
+                        publicReportService.runReport(reportRequest, userName,
+                                                      passWord);
+                str = response.getReportBytesAsString();
+                //            System.err.println("populateBusinessUnit ***-" + str);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                DocumentBuilder db =
+                    DocumentBuilderFactory.newInstance().newDocumentBuilder();
+                InputSource is = new InputSource();
+                is.setCharacterStream(new StringReader(str));
+                Document doc = db.parse(is);
+                NodeList nodes = doc.getElementsByTagName("G_1");
+                for (int i = 0; i < nodes.getLength(); i++) {
+                    Node nNode = nodes.item(i);
+                    if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+                        Element element = (Element)nNode;
+                        
+                        Long TASK_ID_Obj;
+                        if (element.getElementsByTagName("TASK_ID").item(0).getChildNodes().getLength() >
+                            0) {
+                            TASK_ID_Obj =
+                                    Long.valueOf(element.getElementsByTagName("TASK_ID").item(0).getTextContent().toString());
+                        } else {
+                            TASK_ID_Obj = null;
+                        }
+                        
+                        Long EXPENDITURE_ORG_ID_Obj;
+                        if (element.getElementsByTagName("EXPENDITURE_ORG_ID").item(0).getChildNodes().getLength() >
+                            0) {
+                            EXPENDITURE_ORG_ID_Obj =
+                                    Long.valueOf(element.getElementsByTagName("EXPENDITURE_ORG_ID").item(0).getTextContent().toString());
+                        } else {
+                            EXPENDITURE_ORG_ID_Obj = null;
+                        }
+                        
+                        String tNams_obj=(element.getElementsByTagName("TASK_NAME").item(0).getTextContent() !=
+                                          null ?
+                                          element.getElementsByTagName("TASK_NAME").item(0).getTextContent().toString() :
+                                          null);
+                        String tNum_obj=(element.getElementsByTagName("TASK_NUMBER").item(0).getTextContent() !=
+                                        null ?
+                                        element.getElementsByTagName("TASK_NUMBER").item(0).getTextContent().toString() :
+                                        null);
+                        if(searchTNumber!=null||searchTName!=null){
+                            if(tNams_obj!=null&&tNams_obj.startsWith(searchTName) && tNum_obj!=null && tNum_obj.startsWith(searchTNumber)){
+                                taskList.add(new Task(TASK_ID_Obj,
+                                                tNams_obj,
+                                                tNum_obj,
+                                                EXPENDITURE_ORG_ID_Obj,
+                                                (element.getElementsByTagName("EXPENDITURE_ORG_NAME").item(0).getTextContent() !=
+                                                null ?
+                                                element.getElementsByTagName("EXPENDITURE_ORG_NAME").item(0).getTextContent().toString() :
+                                                null)));
+                               }
+                            
+                        }else{
+                            taskList.add(new Task(TASK_ID_Obj,
+                                                  tNams_obj,
+                                                  tNum_obj,
+                                                  EXPENDITURE_ORG_ID_Obj,
+                                                  (element.getElementsByTagName("EXPENDITURE_ORG_NAME").item(0).getTextContent() !=
+                                                   null ?
+                                                   element.getElementsByTagName("EXPENDITURE_ORG_NAME").item(0).getTextContent().toString() :
+                                                   null)));
+                            
+                        }
+                       
+                       
+                       
+                        
+                    }
+                }
+            } catch (Exception e) {
+                System.err.println("===Task===" + e);
+            }
+        }
+        return taskList;
+    }
+
+
+    //****************************SubInventory*****************************************************//
+
+    public List<SubInventory> populateSubInventory() {
+
+        String str = null;
+        ScheduleRequest sreq = new ScheduleRequest();
+        PublicReportServiceService publicReportServiceService =
+            new PublicReportServiceService();
+        PublicReportService publicReportService =
+            publicReportServiceService.getPublicReportService();
+        ReportRequest reportRequest = new ReportRequest();
+        reportRequest.setAttributeFormat("xml");
+        reportRequest.setAttributeLocale("en-US");
+        reportRequest.setAttributeTemplate("Simple");
+        reportRequest.setByPassCache(true);
+        reportRequest.setSizeOfDataChunkDownload(-1);
+        reportRequest.setReportAbsolutePath(subInvPath);
+        reportRequest.setParameterNameValues(null);
+        sreq.setReportRequest(reportRequest);
+        sreq.setSaveDataOption(true);
+        sreq.setScheduleBurstringOption(false);
+        sreq.setSchedulePublicOption(true);
+        sreq.setUserJobName("TEST");
+        try {
+            ReportResponse response = new ReportResponse();
+            response =
+                    publicReportService.runReport(reportRequest, userName, passWord);
+            str = response.getReportBytesAsString();
+            //            System.err.println("populateBusinessUnit ***-" + str);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            DocumentBuilder db =
+                DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            InputSource is = new InputSource();
+            is.setCharacterStream(new StringReader(str));
+            Document doc = db.parse(is);
+            NodeList nodes = doc.getElementsByTagName("G_1");
+            for (int i = 0; i < nodes.getLength(); i++) {
+                Node nNode = nodes.item(i);
+                if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+                    Element element = (Element)nNode;
+                    Long SUBINVENTORY_ID_Obj;
+                    if (element.getElementsByTagName("SUBINVENTORY_ID").item(0).getChildNodes().getLength() >
+                        0) {
+                        SUBINVENTORY_ID_Obj =
+                                Long.valueOf(element.getElementsByTagName("SUBINVENTORY_ID").item(0).getTextContent().toString());
+                    } else {
+                        SUBINVENTORY_ID_Obj = null;
+
+                    }
+                    subInvList.add(new SubInventory(SUBINVENTORY_ID_Obj,
+                                                    (element.getElementsByTagName("DESCRIPTION").item(0).getTextContent() !=
+                                                     null ?
+                                                     element.getElementsByTagName("DESCRIPTION").item(0).getTextContent().toString() :
+                                                     null)));
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("===SubInventory===" + e);
+        }
+        return subInvList;
+    }
+
+
+    //****************************POLineType*****************************************************//
+
+    public List<POLineType> populatePOLineType(String searchDesc) {
+
+        String str = null;
+        ScheduleRequest sreq = new ScheduleRequest();
+        PublicReportServiceService publicReportServiceService =
+            new PublicReportServiceService();
+        PublicReportService publicReportService =
+            publicReportServiceService.getPublicReportService();
+        ReportRequest reportRequest = new ReportRequest();
+        reportRequest.setAttributeFormat("xml");
+        reportRequest.setAttributeLocale("en-US");
+        reportRequest.setAttributeTemplate("Simple");
+        reportRequest.setByPassCache(true);
+        reportRequest.setSizeOfDataChunkDownload(-1);
+        reportRequest.setReportAbsolutePath(poLineTypePath);
+        reportRequest.setParameterNameValues(null);
+        sreq.setReportRequest(reportRequest);
+        sreq.setSaveDataOption(true);
+        sreq.setScheduleBurstringOption(false);
+        sreq.setSchedulePublicOption(true);
+        sreq.setUserJobName("TEST");
+        try {
+            ReportResponse response = new ReportResponse();
+            response =
+                    publicReportService.runReport(reportRequest, userName, passWord);
+            str = response.getReportBytesAsString();
+            //            System.err.println("===TYPE==="+str);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            DocumentBuilder db =
+                DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            InputSource is = new InputSource();
+            is.setCharacterStream(new StringReader(str));
+            Document doc = db.parse(is);
+            NodeList nodes = doc.getElementsByTagName("G_1");
+            for (int i = 0; i < nodes.getLength(); i++) {
+                Node nNode = nodes.item(i);
+                if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+                    Element element = (Element)nNode;
+                    Long LINE_TYPE_ID_Obj;
+                    if (element.getElementsByTagName("LINE_TYPE_ID").item(0).getChildNodes().getLength() >
+                        0) {
+                        LINE_TYPE_ID_Obj =
+                                Long.valueOf(element.getElementsByTagName("LINE_TYPE_ID").item(0).getTextContent().toString());
+                    } else {
+                        LINE_TYPE_ID_Obj = null;
+
+                    }
+                    
+                    String descr_obj=(element.getElementsByTagName("DESCRIPTION").item(0).getTextContent() !=
+                                     null ?
+                                     element.getElementsByTagName("DESCRIPTION").item(0).getTextContent().toString() :
+                                     null);
+                    
+                    if(searchDesc!=null){
+                        if(descr_obj!=null&&descr_obj.startsWith(searchDesc)){
+                         poLineTypeList.add(new POLineType(LINE_TYPE_ID_Obj,
+                                                    descr_obj,
+                                                    (element.getElementsByTagName("ORDER_TYPE_LOOKUP_CODE").item(0).getTextContent() !=
+                                                    null ?
+                                                    element.getElementsByTagName("ORDER_TYPE_LOOKUP_CODE").item(0).getTextContent().toString() :
+                                                    null)));    
+                        }
+                    }else{
+                        poLineTypeList.add(new POLineType(LINE_TYPE_ID_Obj,
+                                                          descr_obj,
+                                                          (element.getElementsByTagName("ORDER_TYPE_LOOKUP_CODE").item(0).getTextContent() !=
+                                                           null ?
+                                                           element.getElementsByTagName("ORDER_TYPE_LOOKUP_CODE").item(0).getTextContent().toString() :
+                                                           null)));    
+                    }
+                    
+                    
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("===POLineType===" + e);
+        }
+        return poLineTypeList;
+    }
+
+    //****************************ExpendType*****************************************************//
+
+    public List<ExpendType> populateExpendType() {
+
+        String str = null;
+        ScheduleRequest sreq = new ScheduleRequest();
+        PublicReportServiceService publicReportServiceService =
+            new PublicReportServiceService();
+        PublicReportService publicReportService =
+            publicReportServiceService.getPublicReportService();
+        ReportRequest reportRequest = new ReportRequest();
+        reportRequest.setAttributeFormat("xml");
+        reportRequest.setAttributeLocale("en-US");
+        reportRequest.setAttributeTemplate("Simple");
+        reportRequest.setByPassCache(true);
+        reportRequest.setSizeOfDataChunkDownload(-1);
+        reportRequest.setReportAbsolutePath(expendTypePath);
+        reportRequest.setParameterNameValues(null);
+        sreq.setReportRequest(reportRequest);
+        sreq.setSaveDataOption(true);
+        sreq.setScheduleBurstringOption(false);
+        sreq.setSchedulePublicOption(true);
+        sreq.setUserJobName("TEST");
+        try {
+            ReportResponse response = new ReportResponse();
+            response =
+                    publicReportService.runReport(reportRequest, userName, passWord);
+            str = response.getReportBytesAsString();
+            //            System.err.println("populateBusinessUnit ***-" + str);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            DocumentBuilder db =
+                DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            InputSource is = new InputSource();
+            is.setCharacterStream(new StringReader(str));
+            Document doc = db.parse(is);
+            NodeList nodes = doc.getElementsByTagName("G_1");
+            for (int i = 0; i < nodes.getLength(); i++) {
+                Node nNode = nodes.item(i);
+                if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+                    Element element = (Element)nNode;
+                    Long EXPENDITURE_TYPE_ID_Obj;
+                    if (element.getElementsByTagName("EXPENDITURE_TYPE_ID").item(0).getChildNodes().getLength() >
+                        0) {
+                        EXPENDITURE_TYPE_ID_Obj =
+                                Long.valueOf(element.getElementsByTagName("EXPENDITURE_TYPE_ID").item(0).getTextContent().toString());
+                    } else {
+                        EXPENDITURE_TYPE_ID_Obj = null;
+
+                    }
+                    expendTypeList.add(new ExpendType(EXPENDITURE_TYPE_ID_Obj,
+                                                      (element.getElementsByTagName("DESCRIPTION").item(0).getTextContent() !=
+                                                       null ?
+                                                       element.getElementsByTagName("DESCRIPTION").item(0).getTextContent().toString() :
+                                                       null)));
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("===ExpendType===" + e);
+        }
+        return expendTypeList;
+    }
+
+    //****************************ExpendOrg*****************************************************//
+
+    public List<ExpendOrg> populateExpendOrg() {
+
+        String str = null;
+        ScheduleRequest sreq = new ScheduleRequest();
+        PublicReportServiceService publicReportServiceService =
+            new PublicReportServiceService();
+        PublicReportService publicReportService =
+            publicReportServiceService.getPublicReportService();
+        ReportRequest reportRequest = new ReportRequest();
+        reportRequest.setAttributeFormat("xml");
+        reportRequest.setAttributeLocale("en-US");
+        reportRequest.setAttributeTemplate("Simple");
+        reportRequest.setByPassCache(true);
+        reportRequest.setSizeOfDataChunkDownload(-1);
+        reportRequest.setReportAbsolutePath(expendOrgPath);
+        reportRequest.setParameterNameValues(null);
+        sreq.setReportRequest(reportRequest);
+        sreq.setSaveDataOption(true);
+        sreq.setScheduleBurstringOption(false);
+        sreq.setSchedulePublicOption(true);
+        sreq.setUserJobName("TEST");
+        try {
+            ReportResponse response = new ReportResponse();
+            response =
+                    publicReportService.runReport(reportRequest, userName, passWord);
+            str = response.getReportBytesAsString();
+            //            System.err.println("populateBusinessUnit ***-" + str);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            DocumentBuilder db =
+                DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            InputSource is = new InputSource();
+            is.setCharacterStream(new StringReader(str));
+            Document doc = db.parse(is);
+            NodeList nodes = doc.getElementsByTagName("G_1");
+            for (int i = 0; i < nodes.getLength(); i++) {
+                Node nNode = nodes.item(i);
+                if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+                    Element element = (Element)nNode;
+                    Long ORGANIZATION_ID_Obj;
+                    if (element.getElementsByTagName("ORGANIZATION_ID").item(0).getChildNodes().getLength() >
+                        0) {
+                        ORGANIZATION_ID_Obj =
+                                Long.valueOf(element.getElementsByTagName("ORGANIZATION_ID").item(0).getTextContent().toString());
+                    } else {
+                        ORGANIZATION_ID_Obj = null;
+
+                    }
+                    expendOrgList.add(new ExpendOrg(ORGANIZATION_ID_Obj,
+                                                    (element.getElementsByTagName("ORGANIZATION_NAME").item(0).getTextContent() !=
+                                                     null ?
+                                                     element.getElementsByTagName("ORGANIZATION_NAME").item(0).getTextContent().toString() :
+                                                     null)));
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("===ExpendOrg===" + e);
+        }
+        return expendOrgList;
+    }
+
+    //****************************InvOrg*****************************************************//
+
+    public List<InvOrg> populateInvOrg() {
+        if (ADFContext.getCurrent().getPageFlowScope().get("BU_IDS") != null) {
+            String str = null;
+            ScheduleRequest sreq = new ScheduleRequest();
+            PublicReportServiceService publicReportServiceService =
+                new PublicReportServiceService();
+            PublicReportService publicReportService =
+                publicReportServiceService.getPublicReportService();
+            ReportRequest reportRequest = new ReportRequest();
+            reportRequest.setAttributeFormat("xml");
+            reportRequest.setAttributeLocale("en-US");
+            reportRequest.setAttributeTemplate("Simple");
+            reportRequest.setByPassCache(true);
+            reportRequest.setSizeOfDataChunkDownload(-1);
+            reportRequest.setReportAbsolutePath(invOrgPath);
+            ArrayOfParamNameValue pNameValue = new ArrayOfParamNameValue();
+            ParamNameValue nameValue = new ParamNameValue();
+            nameValue.setName("P_BU_ID");
+            ArrayOfString aos = new ArrayOfString();
+            aos.getItem().add(ADFContext.getCurrent().getPageFlowScope().get("BU_IDS").toString());
+            nameValue.setValues(aos);
+            pNameValue.getItem().add(nameValue);
+            reportRequest.setParameterNameValues(pNameValue);
+            sreq.setReportRequest(reportRequest);
+            sreq.setSaveDataOption(true);
+            sreq.setScheduleBurstringOption(false);
+            sreq.setSchedulePublicOption(true);
+            sreq.setUserJobName("TEST");
+            try {
+                ReportResponse response = new ReportResponse();
+                response =
+                        publicReportService.runReport(reportRequest, userName,
+                                                      passWord);
+                str = response.getReportBytesAsString();
+                //            System.err.println("populateBusinessUnit ***-" + str);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                DocumentBuilder db =
+                    DocumentBuilderFactory.newInstance().newDocumentBuilder();
+                InputSource is = new InputSource();
+                is.setCharacterStream(new StringReader(str));
+                Document doc = db.parse(is);
+                NodeList nodes = doc.getElementsByTagName("G_1");
+                for (int i = 0; i < nodes.getLength(); i++) {
+                    Node nNode = nodes.item(i);
+                    if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+                        Element element = (Element)nNode;
+                        Long ORGANIZATION_ID_Obj;
+                        if (element.getElementsByTagName("ORGANIZATION_ID").item(0).getChildNodes().getLength() >
+                            0) {
+                            ORGANIZATION_ID_Obj =
+                                    Long.valueOf(element.getElementsByTagName("ORGANIZATION_ID").item(0).getTextContent().toString());
+                        } else {
+                            ORGANIZATION_ID_Obj = null;
+
+                        }
+                        invOrgList.add(new InvOrg(ORGANIZATION_ID_Obj,
+                                                  (element.getElementsByTagName("ORGANIZATION_CODE").item(0).getTextContent() !=
+                                                   null ?
+                                                   element.getElementsByTagName("ORGANIZATION_CODE").item(0).getTextContent().toString() :
+                                                   null),
+                                                  (element.getElementsByTagName("ORGANIZATION_NAME").item(0).getTextContent() !=
+                                                   null ?
+                                                   element.getElementsByTagName("ORGANIZATION_NAME").item(0).getTextContent().toString() :
+                                                   null)));
+                    }
+                }
+            } catch (Exception e) {
+                System.err.println("===invOrgList===" + e);
+            }
+        }
+        return invOrgList;
+    }
+    //****************************Item*****************************************************//
+
+    public List<Item> populateItem(String ItemDescName, String ItemDescNo) {
+        //p_task_id,p_project_id,p_inv_org_id
+        //        if (ADFContext.getCurrent().getPageFlowScope().get("PRO_IDS") !=
+        //            null &&
+        //            ADFContext.getCurrent().getPageFlowScope().get("TASK_IDS") !=
+        //            null) {
+        String str = null;
+        ScheduleRequest sreq = new ScheduleRequest();
+        PublicReportServiceService publicReportServiceService =
+            new PublicReportServiceService();
+        PublicReportService publicReportService =
+            publicReportServiceService.getPublicReportService();
+        ReportRequest reportRequest = new ReportRequest();
+        reportRequest.setAttributeFormat("xml");
+        reportRequest.setAttributeLocale("en-US");
+        reportRequest.setAttributeTemplate("Simple");
+        reportRequest.setByPassCache(true);
+        reportRequest.setSizeOfDataChunkDownload(-1);
+        reportRequest.setReportAbsolutePath(itemPath);
+
+        ArrayOfParamNameValue pNameValue = new ArrayOfParamNameValue();
+
+        ParamNameValue nameValue = new ParamNameValue();
+        nameValue.setName("p_item_code");
+        ArrayOfString aos = new ArrayOfString();
+        aos.getItem().add(ItemDescName);
+        nameValue.setValues(aos);
+        pNameValue.getItem().add(nameValue);
+
+        ParamNameValue nameValue1 = new ParamNameValue();
+        nameValue1.setName("p_item_desc");
+        ArrayOfString aos1 = new ArrayOfString();
+        aos1.getItem().add(ItemDescNo);
+        nameValue1.setValues(aos1);
+        pNameValue.getItem().add(nameValue1);
+
+        if (ADFContext.getCurrent().getPageFlowScope().get("PRO_IDS") !=
+            null) {
+            System.err.println("=====PRO===");
+            ParamNameValue nameValue3 = new ParamNameValue();
+            nameValue3.setName("p_project_id");
+            ArrayOfString aos3 = new ArrayOfString();
+            aos3.getItem().add(ADFContext.getCurrent().getPageFlowScope().get("PRO_IDS").toString());
+            nameValue3.setValues(aos3);
+            pNameValue.getItem().add(nameValue3);
+        }
+
+        if (ADFContext.getCurrent().getPageFlowScope().get("TASK_IDS") !=
+            null) {
+            ParamNameValue nameValue4 = new ParamNameValue();
+            nameValue4.setName("p_task_id");
+            ArrayOfString aos4 = new ArrayOfString();
+            aos4.getItem().add(ADFContext.getCurrent().getPageFlowScope().get("TASK_IDS").toString());
+            nameValue4.setValues(aos4);
+            pNameValue.getItem().add(nameValue4);
+        }
+       
+        reportRequest.setParameterNameValues(pNameValue);
+        sreq.setReportRequest(reportRequest);
+        sreq.setSaveDataOption(true);
+        sreq.setScheduleBurstringOption(false);
+        sreq.setSchedulePublicOption(true);
+        sreq.setUserJobName("TEST");
+        try {
+            ReportResponse response = new ReportResponse();
+            response =
+                    publicReportService.runReport(reportRequest, userName, passWord);
+            str = response.getReportBytesAsString();
+            System.err.println("====ITEM====" + str);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            DocumentBuilder db =
+                DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            InputSource is = new InputSource();
+            is.setCharacterStream(new StringReader(str));
+            Document doc = db.parse(is);
+            NodeList nodes = doc.getElementsByTagName("G_1");
+            for (int i = 0; i < nodes.getLength(); i++) {
+                Node nNode = nodes.item(i);
+                if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+                    Element element = (Element)nNode;
+                    Long INVENTORY_ITEM_ID_Obj;
+                    if (element.getElementsByTagName("INVENTORY_ITEM_ID").item(0).getChildNodes().getLength() >
+                        0) {
+                        INVENTORY_ITEM_ID_Obj =
+                                Long.valueOf(element.getElementsByTagName("INVENTORY_ITEM_ID").item(0).getTextContent().toString());
+                    } else {
+                        INVENTORY_ITEM_ID_Obj = null;
+
+                    }
+                    Long ITEM_COST_Obj;
+                    if (element.getElementsByTagName("ITEM_COST").item(0).getChildNodes().getLength() >
+                        0) {
+                        ITEM_COST_Obj =
+                                Long.valueOf(element.getElementsByTagName("ITEM_COST").item(0).getTextContent().toString());
+                    } else {
+                        ITEM_COST_Obj = null;
+
+                    }
+                                            Long CATEGORY_ID_Obj;
+                                            if (element.getElementsByTagName("CATEGORY_ID").item(0).getChildNodes().getLength() >
+                                                0) {
+                                                CATEGORY_ID_Obj =
+                                                        Long.valueOf(element.getElementsByTagName("CATEGORY_ID").item(0).getTextContent().toString());
+                                            } else {
+                                                CATEGORY_ID_Obj = null;
+                    
+                                            }
+
+                    String ItemDesc =
+                        (element.getElementsByTagName("ITEM_DESCRIPTION").item(0).getTextContent() !=
+                         null ?
+                         element.getElementsByTagName("ITEM_DESCRIPTION").item(0).getTextContent().toString() :
+                         null);
+
+                    itemList.add(new Item(INVENTORY_ITEM_ID_Obj,
+                                          (element.getElementsByTagName("ITEM_NUMBER").item(0).getTextContent() !=
+                                           null ?
+                                           element.getElementsByTagName("ITEM_NUMBER").item(0).getTextContent().toString() :
+                                           null), ItemDesc,
+                                          (element.getElementsByTagName("ITEM_REVISION").item(0).getTextContent() !=
+                                           null ?
+                                           element.getElementsByTagName("ITEM_REVISION").item(0).getTextContent().toString() :
+                                           null),
+                                          (element.getElementsByTagName("UNIT_OF_MEASURE").item(0).getTextContent() !=
+                                           null ?
+                                           element.getElementsByTagName("UNIT_OF_MEASURE").item(0).getTextContent().toString() :
+                                           null),
+                                          (element.getElementsByTagName("CATEGORY_CODE").item(0).getTextContent() !=
+                                           null ?
+                                           element.getElementsByTagName("CATEGORY_CODE").item(0).getTextContent().toString() :
+                                           null),
+                                          (element.getElementsByTagName("CATEGORY_NAME").item(0).getTextContent() !=
+                                           null ?
+                                           element.getElementsByTagName("CATEGORY_NAME").item(0).getTextContent().toString() :
+                                           null), ITEM_COST_Obj, CATEGORY_ID_Obj,
+                                            (element.getElementsByTagName("UOM_CODE").item(0).getTextContent() !=
+                                             null ?
+                                             element.getElementsByTagName("UOM_CODE").item(0).getTextContent().toString() :
+                                             null)));
+
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("===Item===" + e);
+        }
+        //        }
+        return itemList;
+    }
+
+
+    //    //****************************LegalEntity*****************************************************//
+    //
+    //    public List<LegalEntity> populateLegaEntity() {
+    //        String str = null;
+    //        ScheduleRequest sreq = new ScheduleRequest();
+    //        PublicReportServiceService publicReportServiceService =
+    //            new PublicReportServiceService();
+    //        PublicReportService publicReportService =
+    //            publicReportServiceService.getPublicReportService();
+    //        ReportRequest reportRequest = new ReportRequest();
+    //        reportRequest.setAttributeFormat("xml");
+    //        reportRequest.setAttributeLocale("en-US");
+    //        reportRequest.setAttributeTemplate("Simple");
+    //        reportRequest.setByPassCache(true);
+    //        reportRequest.setSizeOfDataChunkDownload(-1);
+    //        reportRequest.setReportAbsolutePath(legalEntityPath);
+    //        reportRequest.setParameterNameValues(null);
+    //        sreq.setReportRequest(reportRequest);
+    //        sreq.setSaveDataOption(true);
+    //        sreq.setScheduleBurstringOption(false);
+    //        sreq.setSchedulePublicOption(true);
+    //        sreq.setUserJobName("TEST");
+    //        try {
+    //            ReportResponse response = new ReportResponse();
+    //            response =
+    //                    publicReportService.runReport(reportRequest, userName, passWord);
+    //            str = response.getReportBytesAsString();
+    //            System.err.println("populateBusinessUnit ***-" + str);
+    //        } catch (Exception e) {
+    //            e.printStackTrace();
+    //        }
+    //        try {
+    //            DocumentBuilder db =
+    //                DocumentBuilderFactory.newInstance().newDocumentBuilder();
+    //            InputSource is = new InputSource();
+    //            is.setCharacterStream(new StringReader(str));
+    //
+    //            Document doc = db.parse(is);
+    //            NodeList nodes = doc.getElementsByTagName("G_1");
+    //            for (int i = 0; i < nodes.getLength(); i++) {
+    //                Node nNode = nodes.item(i);
+    //                if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+    //                    Element element = (Element)nNode;
+    //                    Long LE_ID_Obj;
+    //                    if (element.getElementsByTagName("LE_ID").item(0).getChildNodes().getLength() >
+    //                        0) {
+    //                        LE_ID_Obj =
+    //                                Long.valueOf(element.getElementsByTagName("LE_ID").item(0).getTextContent().toString());
+    //                    } else {
+    //                        LE_ID_Obj = null;
+    //                    }
+    //                    legalEntityList.add(new LegalEntity(LE_ID_Obj,
+    //                                                        (element.getElementsByTagName("LE_NAME").item(0).getTextContent() !=
+    //                                                         null ?
+    //                                                         element.getElementsByTagName("LE_NAME").item(0).getTextContent().toString() :
+    //                                                         null)));
+    //                }
+    //            }
+    //        } catch (Exception e) {
+    //            System.err.println("===LegalEntity===" + e);
+    //        }
+    //        return legalEntityList;
+    //    }
+
+
+    //****************************UOM*****************************************************//
+
+    public List<UOM> populateUOM(String searchUom) {
+        System.err.println("=====++UOM CODE++==="+ADFContext.getCurrent().getPageFlowScope().get("UOM_CODE"));
+        if (ADFContext.getCurrent().getPageFlowScope().get("UOM_CODE") !=
+            null) {
+            String str = null;
+            ScheduleRequest sreq = new ScheduleRequest();
+            PublicReportServiceService publicReportServiceService =
+                new PublicReportServiceService();
+            PublicReportService publicReportService =
+                publicReportServiceService.getPublicReportService();
+            ReportRequest reportRequest = new ReportRequest();
+            reportRequest.setAttributeFormat("xml");
+            reportRequest.setAttributeLocale("en-US");
+            reportRequest.setAttributeTemplate("Simple");
+            reportRequest.setByPassCache(true);
+            reportRequest.setSizeOfDataChunkDownload(-1);
+            reportRequest.setReportAbsolutePath(UomPath);
+            
+            ArrayOfParamNameValue pNameValue = new ArrayOfParamNameValue();
+            ParamNameValue nameValue = new ParamNameValue();
+            nameValue.setName("p_uom_code");
+            ArrayOfString aos = new ArrayOfString();
+            //aos.getItem().add(searchUom);
+            aos.getItem().add(ADFContext.getCurrent().getPageFlowScope().get("UOM_CODE").toString());
+            nameValue.setValues(aos);
+            pNameValue.getItem().add(nameValue);
+            
+            reportRequest.setParameterNameValues(pNameValue);
+            sreq.setReportRequest(reportRequest);
+            sreq.setSaveDataOption(true);
+            sreq.setScheduleBurstringOption(false);
+            sreq.setSchedulePublicOption(true);
+            sreq.setUserJobName("TEST");
+            try {
+                ReportResponse response = new ReportResponse();
+                response =
+                        publicReportService.runReport(reportRequest, userName,
+                                                      passWord);
+                str = response.getReportBytesAsString();
+                System.err.println("===UOM===" + str);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                DocumentBuilder db =
+                    DocumentBuilderFactory.newInstance().newDocumentBuilder();
+                InputSource is = new InputSource();
+                is.setCharacterStream(new StringReader(str));
+                Document doc = db.parse(is);
+                NodeList nodes = doc.getElementsByTagName("G_1");
+                for (int i = 0; i < nodes.getLength(); i++) {
+                    Node nNode = nodes.item(i);
+                    if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+                        Element element = (Element)nNode;
+
+                /*
+                  String code_uom =(element.getElementsByTagName("UOM_CODE").item(0).getTextContent() !=
+                                             null ?
+                                             element.getElementsByTagName("UOM_CODE").item(0).getTextContent().toString() :
+                                             null); 
+                */
+                 
+                 String toCode=(element.getElementsByTagName("TO_UOM_DESC").item(0).getTextContent() !=
+                               null ?
+                               element.getElementsByTagName("TO_UOM_DESC").item(0).getTextContent().toString() :
+                               null);
+                        if(searchUom!=null){
+                            if(toCode!=null&&toCode.startsWith(searchUom)){
+                                UOMList.add(new UOM((element.getElementsByTagName("FROM_UOM_CODE").item(0).getTextContent() !=
+                                                          null ?
+                                                          element.getElementsByTagName("FROM_UOM_CODE").item(0).getTextContent().toString() :
+                                                          null),
+                                                          (element.getElementsByTagName("FROM_UOM_DESC").item(0).getTextContent() !=
+                                                          null ?
+                                                          element.getElementsByTagName("FROM_UOM_DESC").item(0).getTextContent().toString() :
+                                                          null),
+                                                          (element.getElementsByTagName("TO_UOM_CODE").item(0).getTextContent() !=
+                                                          null ?
+                                                          element.getElementsByTagName("TO_UOM_CODE").item(0).getTextContent().toString() :
+                                                          null),toCode));
+                                    }
+                      }else{
+                            UOMList.add(new UOM((element.getElementsByTagName("FROM_UOM_CODE").item(0).getTextContent() !=
+                                                          null ?
+                                                          element.getElementsByTagName("FROM_UOM_CODE").item(0).getTextContent().toString() :
+                                                          null),
+                                                          (element.getElementsByTagName("FROM_UOM_DESC").item(0).getTextContent() !=
+                                                          null ?
+                                                          element.getElementsByTagName("FROM_UOM_DESC").item(0).getTextContent().toString() :
+                                                          null),
+                                                          (element.getElementsByTagName("TO_UOM_CODE").item(0).getTextContent() !=
+                                                          null ?
+                                                          element.getElementsByTagName("TO_UOM_CODE").item(0).getTextContent().toString() :
+                                                          null),toCode));       
+                        }
+                        }
+                }
+            } catch (Exception e) {
+                System.err.println("===BusinessUnit===" + e);
+            }
+        }
+        return UOMList;
+    }
+
+    //*****************************ExpenditureType****************************************************//
+
+    public List<ExpenditureType> populateExpenditureType(String exname) {
+        String str = null;
+        ScheduleRequest sreq = new ScheduleRequest();
+        PublicReportServiceService publicReportServiceService =
+            new PublicReportServiceService();
+        PublicReportService publicReportService =
+            publicReportServiceService.getPublicReportService();
+        ReportRequest reportRequest = new ReportRequest();
+        reportRequest.setAttributeFormat("xml");
+        reportRequest.setAttributeLocale("en-US");
+        reportRequest.setAttributeTemplate("Simple");
+        reportRequest.setByPassCache(true);
+        reportRequest.setSizeOfDataChunkDownload(-1);
+        reportRequest.setReportAbsolutePath(expenPath);
+        reportRequest.setParameterNameValues(null);
+        sreq.setReportRequest(reportRequest);
+        sreq.setSaveDataOption(true);
+        sreq.setScheduleBurstringOption(false);
+        sreq.setSchedulePublicOption(true);
+        sreq.setUserJobName("TEST");
+        try {
+            ReportResponse response = new ReportResponse();
+            response =
+                    publicReportService.runReport(reportRequest, userName, passWord);
+            str = response.getReportBytesAsString();
+            //            System.err.println("===EX==="+str);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            DocumentBuilder db =
+                DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            InputSource is = new InputSource();
+            is.setCharacterStream(new StringReader(str));
+            Document doc = db.parse(is);
+            NodeList nodes = doc.getElementsByTagName("G_1");
+            for (int i = 0; i < nodes.getLength(); i++) {
+                Node nNode = nodes.item(i);
+                if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+                    Element element = (Element)nNode;
+                    Long EXPENDITURE_TYPE_ID_Obj;
+                    if (element.getElementsByTagName("EXPENDITURE_TYPE_ID").item(0).getChildNodes().getLength() >
+                        0) {
+                        EXPENDITURE_TYPE_ID_Obj =
+                                Long.valueOf(element.getElementsByTagName("EXPENDITURE_TYPE_ID").item(0).getTextContent().toString());
+                    } else {
+                        EXPENDITURE_TYPE_ID_Obj = null;
+
+                    }
+
+                    String Expname =
+                        (element.getElementsByTagName("EXPENDITURE_TYPE_NAME").item(0).getTextContent() !=
+                         null ?
+                         element.getElementsByTagName("EXPENDITURE_TYPE_NAME").item(0).getTextContent().toString() :
+                         null);
+
+                    if (exname != null) {
+                        if (Expname != null && Expname.startsWith(exname)) {
+                            expendList.add(new ExpenditureType(EXPENDITURE_TYPE_ID_Obj,
+                                                               Expname,
+                                                               (element.getElementsByTagName("DESCRIPTION").item(0).getTextContent() !=
+                                                                null ?
+                                                                element.getElementsByTagName("DESCRIPTION").item(0).getTextContent().toString() :
+                                                                null)));
+                        }
+                    } else {
+                        expendList.add(new ExpenditureType(EXPENDITURE_TYPE_ID_Obj,
+                                                           Expname,
+                                                           (element.getElementsByTagName("DESCRIPTION").item(0).getTextContent() !=
+                                                            null ?
+                                                            element.getElementsByTagName("DESCRIPTION").item(0).getTextContent().toString() :
+                                                            null)));
+                    }
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("===ExpenditureType===" + e);
+        }
+        return expendList;
+    }
+
+    //****************************Org*****************************************************//
+
+    public List<Organization> populateOrganization() {
+        if (ADFContext.getCurrent().getPageFlowScope().get("BU_IDS") != null) {
+            String str = null;
+            ScheduleRequest sreq = new ScheduleRequest();
+            PublicReportServiceService publicReportServiceService =
+                new PublicReportServiceService();
+            PublicReportService publicReportService =
+                publicReportServiceService.getPublicReportService();
+            ReportRequest reportRequest = new ReportRequest();
+            reportRequest.setAttributeFormat("xml");
+            reportRequest.setAttributeLocale("en-US");
+            reportRequest.setAttributeTemplate("Simple");
+            reportRequest.setByPassCache(true);
+            reportRequest.setSizeOfDataChunkDownload(-1);
+            reportRequest.setReportAbsolutePath(orgPath);
+            ArrayOfParamNameValue pNameValue = new ArrayOfParamNameValue();
+            ParamNameValue nameValue = new ParamNameValue();
+            nameValue.setName("P_BU_ID");
+            ArrayOfString aos = new ArrayOfString();
+            aos.getItem().add(ADFContext.getCurrent().getPageFlowScope().get("BU_IDS").toString());
+            nameValue.setValues(aos);
+            pNameValue.getItem().add(nameValue);
+            reportRequest.setParameterNameValues(pNameValue);
+            reportRequest.setParameterNameValues(null);
+            sreq.setReportRequest(reportRequest);
+            sreq.setSaveDataOption(true);
+            sreq.setScheduleBurstringOption(false);
+            sreq.setSchedulePublicOption(true);
+            sreq.setUserJobName("TEST");
+            try {
+                ReportResponse response = new ReportResponse();
+                response =
+                        publicReportService.runReport(reportRequest, userName,
+                                                      passWord);
+                str = response.getReportBytesAsString();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                DocumentBuilder db =
+                    DocumentBuilderFactory.newInstance().newDocumentBuilder();
+                InputSource is = new InputSource();
+                is.setCharacterStream(new StringReader(str));
+                Document doc = db.parse(is);
+                NodeList nodes = doc.getElementsByTagName("G_1");
+                for (int i = 0; i < nodes.getLength(); i++) {
+                    Node nNode = nodes.item(i);
+                    if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+                        Element element = (Element)nNode;
+                        Long ORGANIZATION_ID_Obj;
+                        if (element.getElementsByTagName("ORGANIZATION_ID").item(0).getChildNodes().getLength() >
+                            0) {
+                            ORGANIZATION_ID_Obj =
+                                    Long.valueOf(element.getElementsByTagName("ORGANIZATION_ID").item(0).getTextContent().toString());
+                        } else {
+                            ORGANIZATION_ID_Obj = null;
+
+                        }
+
+                        orgList.add(new Organization(ORGANIZATION_ID_Obj,
+                                                     (element.getElementsByTagName("ORGANIZATION_NAME").item(0).getTextContent() !=
+                                                      null ?
+                                                      element.getElementsByTagName("ORGANIZATION_NAME").item(0).getTextContent().toString() :
+                                                      null)));
+
+                        //                    System.err.println("====BU====" +
+                        //                                       element.getElementsByTagName("BU_NAME").item(0).getTextContent().toString() +
+                        //                                       "===LE====" +
+                        //                                       element.getElementsByTagName("LE_NAME").item(0).getTextContent().toString());
+
+                    }
+                }
+            } catch (Exception e) {
+                System.err.println("===Organization===" + e);
+            }
+        }
+        return orgList;
+    }
+
+    //****************************DestinationType****************************************************//
+
+    public List<DestinationType> populateDestinationType(String code, String desc) {
+        String str = null;
+        ScheduleRequest sreq = new ScheduleRequest();
+        PublicReportServiceService publicReportServiceService =
+            new PublicReportServiceService();
+        PublicReportService publicReportService =
+            publicReportServiceService.getPublicReportService();
+        ReportRequest reportRequest = new ReportRequest();
+        reportRequest.setAttributeFormat("xml");
+        reportRequest.setAttributeLocale("en-US");
+        reportRequest.setAttributeTemplate("Simple");
+        reportRequest.setByPassCache(true);
+        reportRequest.setSizeOfDataChunkDownload(-1);
+        reportRequest.setReportAbsolutePath(descTypePath);
+        reportRequest.setParameterNameValues(null);
+        sreq.setReportRequest(reportRequest);
+        sreq.setSaveDataOption(true);
+        sreq.setScheduleBurstringOption(false);
+        sreq.setSchedulePublicOption(true);
+        sreq.setUserJobName("TEST");
+        try {
+            ReportResponse response = new ReportResponse();
+            response =
+                    publicReportService.runReport(reportRequest, userName, passWord);
+            str = response.getReportBytesAsString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            DocumentBuilder db =
+                DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            InputSource is = new InputSource();
+            is.setCharacterStream(new StringReader(str));
+            Document doc = db.parse(is);
+            NodeList nodes = doc.getElementsByTagName("G_1");
+            for (int i = 0; i < nodes.getLength(); i++) {
+                Node nNode = nodes.item(i);
+                if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+                    Element element = (Element)nNode;
+
+                   String Code_obj=(element.getElementsByTagName("CODE").item(0).getTextContent() !=
+                                                     null ?
+                                                     element.getElementsByTagName("CODE").item(0).getTextContent().toString() :
+                                                     null);
+                   String desc_obj=(element.getElementsByTagName("DESCRIPTION").item(0).getTextContent() !=
+                                                     null ?
+                                                     element.getElementsByTagName("DESCRIPTION").item(0).getTextContent().toString() :
+                                                     null);
+                   if(code!=null || desc!=null){
+                       if(Code_obj!=null&&Code_obj.startsWith(code) && desc_obj!=null&&desc_obj.startsWith(desc)){
+                           desList.add(new DestinationType(Code_obj,
+                                      (element.getElementsByTagName("MEANING").item(0).getTextContent() !=
+                                      null ?
+                                      element.getElementsByTagName("MEANING").item(0).getTextContent().toString() :
+                                      null),desc_obj));  
+                       }
+                   }else{
+                     desList.add(new DestinationType(Code_obj,
+                                (element.getElementsByTagName("MEANING").item(0).getTextContent() !=
+                                null ?
+                                element.getElementsByTagName("MEANING").item(0).getTextContent().toString() :
+                                null),desc_obj));
+                   }
+                   }
+            }
+        } catch (Exception e) {
+            System.err.println("===DestinationType===" + e);
+        }
+        return desList;
+    }
+
+    //****************************InvOrg*****************************************************//
+
+    public List<InvOrg> populateShipInvOrg(String searchOrg) {
+        if (ADFContext.getCurrent().getPageFlowScope().get("BU_IDS") != null) {
+            String str = null;
+            ScheduleRequest sreq = new ScheduleRequest();
+            PublicReportServiceService publicReportServiceService =
+                new PublicReportServiceService();
+            PublicReportService publicReportService =
+                publicReportServiceService.getPublicReportService();
+            ReportRequest reportRequest = new ReportRequest();
+            reportRequest.setAttributeFormat("xml");
+            reportRequest.setAttributeLocale("en-US");
+            reportRequest.setAttributeTemplate("Simple");
+            reportRequest.setByPassCache(true);
+            reportRequest.setSizeOfDataChunkDownload(-1);
+            reportRequest.setReportAbsolutePath(invOrgPath);
+            ArrayOfParamNameValue pNameValue = new ArrayOfParamNameValue();
+            ParamNameValue nameValue = new ParamNameValue();
+            nameValue.setName("P_BU_ID");
+            ArrayOfString aos = new ArrayOfString();
+            aos.getItem().add(ADFContext.getCurrent().getPageFlowScope().get("BU_IDS").toString());
+            nameValue.setValues(aos);
+            pNameValue.getItem().add(nameValue);
+            reportRequest.setParameterNameValues(pNameValue);
+            sreq.setReportRequest(reportRequest);
+            sreq.setSaveDataOption(true);
+            sreq.setScheduleBurstringOption(false);
+            sreq.setSchedulePublicOption(true);
+            sreq.setUserJobName("TEST");
+            try {
+                ReportResponse response = new ReportResponse();
+                response =
+                        publicReportService.runReport(reportRequest, userName,
+                                                      passWord);
+                str = response.getReportBytesAsString();
+                System.err.println("====INV ORG=====" + str);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                DocumentBuilder db =
+                    DocumentBuilderFactory.newInstance().newDocumentBuilder();
+                InputSource is = new InputSource();
+                is.setCharacterStream(new StringReader(str));
+                Document doc = db.parse(is);
+                NodeList nodes = doc.getElementsByTagName("G_1");
+                for (int i = 0; i < nodes.getLength(); i++) {
+                    Node nNode = nodes.item(i);
+                    if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+                        Element element = (Element)nNode;
+                        Long ORGANIZATION_ID_Obj;
+                        if (element.getElementsByTagName("ORGANIZATION_ID").item(0).getChildNodes().getLength() >
+                            0) {
+                            ORGANIZATION_ID_Obj =
+                                    Long.valueOf(element.getElementsByTagName("ORGANIZATION_ID").item(0).getTextContent().toString());
+                        } else {
+                            ORGANIZATION_ID_Obj = null;
+
+                        }
+                        String org_Obj=(element.getElementsByTagName("ORGANIZATION_NAME").item(0).getTextContent() !=
+                                        null ?
+                                        element.getElementsByTagName("ORGANIZATION_NAME").item(0).getTextContent().toString() :
+                                        null);
+                        if(searchOrg!=null){
+                            if(org_Obj!=null&&org_Obj.startsWith(searchOrg)){
+                                invOrgList.add(new InvOrg(ORGANIZATION_ID_Obj, null,org_Obj));    
+                            }
+                        }else{
+                            invOrgList.add(new InvOrg(ORGANIZATION_ID_Obj, null,org_Obj));    
+                        }
+                      }
+                }
+            } catch (Exception e) {
+                System.err.println("===invOrgList==1=" + e);
+            }
+        }
+        return invOrgList;
+    }
+
+
+    //****************************GL Account*****************************************************//
+
+    public List<GLAccount> populateGLAccount(String segmentname) {
+        //p_task_id,p_project_id,p_inv_org_id
+        if (ADFContext.getCurrent().getPageFlowScope().get("PRO_IDS") !=
+            null &&
+            ADFContext.getCurrent().getPageFlowScope().get("TASK_IDS") !=
+            null) {
+            String str = null;
+            ScheduleRequest sreq = new ScheduleRequest();
+            PublicReportServiceService publicReportServiceService =
+                new PublicReportServiceService();
+            PublicReportService publicReportService =
+                publicReportServiceService.getPublicReportService();
+            ReportRequest reportRequest = new ReportRequest();
+            reportRequest.setAttributeFormat("xml");
+            reportRequest.setAttributeLocale("en-US");
+            reportRequest.setAttributeTemplate("Simple");
+            reportRequest.setByPassCache(true);
+            reportRequest.setSizeOfDataChunkDownload(-1);
+            reportRequest.setReportAbsolutePath(gLAccountPath);
+
+            ArrayOfParamNameValue pNameValue = new ArrayOfParamNameValue();
+
+
+            ParamNameValue nameValue = new ParamNameValue();
+            nameValue.setName("p_segment");
+            ArrayOfString aos = new ArrayOfString();
+            aos.getItem().add(segmentname);
+            nameValue.setValues(aos);
+            pNameValue.getItem().add(nameValue);
+
+
+            ParamNameValue nameValue2 = new ParamNameValue();
+            nameValue2.setName("p_inv_org_id");
+            ArrayOfString aos2 = new ArrayOfString();
+            aos2.getItem().add("300000002426744");
+            nameValue2.setValues(aos2);
+            pNameValue.getItem().add(nameValue2);
+            //ADFContext.getCurrent().getPageFlowScope().get("TASK_IDS").toString()
+            //ADFContext.getCurrent().getPageFlowScope().get("PRO_IDS").toString()
+            //            ParamNameValue nameValue = new ParamNameValue();
+            //            nameValue.setName("p_inv_org_id");
+            //            ArrayOfString aos = new ArrayOfString();
+            //            aos.getItem().add(ADFContext.getCurrent().getPageFlowScope().get("PRO_IDS").toString());
+            //            nameValue.setValues(aos);
+            //            pNameValue.getItem().add(nameValue);
+            //            reportRequest.setParameterNameValues(pNameValue);
+            reportRequest.setParameterNameValues(pNameValue);
+            sreq.setReportRequest(reportRequest);
+            sreq.setSaveDataOption(true);
+            sreq.setScheduleBurstringOption(false);
+            sreq.setSchedulePublicOption(true);
+            sreq.setUserJobName("TEST");
+            try {
+                ReportResponse response = new ReportResponse();
+                response =
+                        publicReportService.runReport(reportRequest, userName,
+                                                      passWord);
+                str = response.getReportBytesAsString();
+                System.err.println("====ITEM====" + str);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                DocumentBuilder db =
+                    DocumentBuilderFactory.newInstance().newDocumentBuilder();
+                InputSource is = new InputSource();
+                is.setCharacterStream(new StringReader(str));
+                Document doc = db.parse(is);
+                NodeList nodes = doc.getElementsByTagName("G_1");
+                for (int i = 0; i < nodes.getLength(); i++) {
+                    Node nNode = nodes.item(i);
+                    if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+                        Element element = (Element)nNode;
+                        Long INVENTORY_ITEM_ID_Obj;
+                        //                        if (element.getElementsByTagName("INVENTORY_ITEM_ID").item(0).getChildNodes().getLength() >
+                        //                            0) {
+                        //                            INVENTORY_ITEM_ID_Obj =
+                        //                                    Long.valueOf(element.getElementsByTagName("INVENTORY_ITEM_ID").item(0).getTextContent().toString());
+                        //                        } else {
+                        //                            INVENTORY_ITEM_ID_Obj = null;
+                        //
+                        //                        }
+                        //                        Long ITEM_COST_Obj;
+                        //                        if (element.getElementsByTagName("ITEM_COST").item(0).getChildNodes().getLength() >
+                        //                            0) {
+                        //                            ITEM_COST_Obj =
+                        //                                    Long.valueOf(element.getElementsByTagName("ITEM_COST").item(0).getTextContent().toString());
+                        //                        } else {
+                        //                            ITEM_COST_Obj = null;
+                        //
+                        //                        }
+                        //                        Long CATEGORY_ID_Obj;
+                        //                        if (element.getElementsByTagName("CATEGORY_ID").item(0).getChildNodes().getLength() >
+                        //                            0) {
+                        //                            CATEGORY_ID_Obj =
+                        //                                    Long.valueOf(element.getElementsByTagName("CATEGORY_ID").item(0).getTextContent().toString());
+                        //                        } else {
+                        //                            CATEGORY_ID_Obj = null;
+                        //
+                        //                        }
+                        //
+                        //                     String ItemDesc= (element.getElementsByTagName("ITEM_DESCRIPTION").item(0).getTextContent() !=
+                        //                                               null ?
+                        //                                               element.getElementsByTagName("ITEM_DESCRIPTION").item(0).getTextContent().toString() :
+                        //                                               null);
+
+                        gLAccountList.add(new GLAccount((element.getElementsByTagName("FLEX_VALUE").item(0).getTextContent() !=
+                                                         null ?
+                                                         element.getElementsByTagName("FLEX_VALUE").item(0).getTextContent().toString() :
+                                                         null),
+                                                        (element.getElementsByTagName("FLEX_DESCRIPTION").item(0).getTextContent() !=
+                                                         null ?
+                                                         element.getElementsByTagName("FLEX_DESCRIPTION").item(0).getTextContent().toString() :
+                                                         null)));
+
+                    }
+                }
+            } catch (Exception e) {
+                System.err.println("===gLAccountList===" + e);
+            }
+        }
+        return gLAccountList;
+    }
+
+    //****************************ProjectBudget*****************************************************//
+
+    public Double populateProjectBudget(String projectId, String taskId) {
+        Double budgetAmt=null;
+//        System.err.println("==PRO=="+ADFContext.getCurrent().getPageFlowScope().get("PRO_IDS")+"===TASK==="+ADFContext.getCurrent().getPageFlowScope().get("TASK_IDS"));
+//        if (ADFContext.getCurrent().getPageFlowScope().get("PRO_IDS") !=
+//            null &&
+//            ADFContext.getCurrent().getPageFlowScope().get("TASK_IDS") !=
+//            null) {
+            String str = null;
+            ScheduleRequest sreq = new ScheduleRequest();
+            PublicReportServiceService publicReportServiceService = new PublicReportServiceService();
+            PublicReportService publicReportService =publicReportServiceService.getPublicReportService();
+            ReportRequest reportRequest = new ReportRequest();
+            reportRequest.setAttributeFormat("xml");
+            reportRequest.setAttributeLocale("en-US");
+            reportRequest.setAttributeTemplate("Simple");
+            reportRequest.setByPassCache(true);
+            reportRequest.setSizeOfDataChunkDownload(-1);
+            reportRequest.setReportAbsolutePath(projectBudgetPath);
+
+            ArrayOfParamNameValue pNameValue = new ArrayOfParamNameValue();
+
+            
+            ParamNameValue nameValue = new ParamNameValue();
+            nameValue.setName("p_project_id");
+            ArrayOfString aos = new ArrayOfString();
+            aos.getItem().add(projectId);
+            nameValue.setValues(aos);
+            pNameValue.getItem().add(nameValue);
+                        
+            ParamNameValue nameValue1 = new ParamNameValue();
+            nameValue1.setName("p_task_id");
+            ArrayOfString aos1 = new ArrayOfString();
+            aos1.getItem().add(taskId);
+            nameValue1.setValues(aos1);
+            pNameValue.getItem().add(nameValue1);
+            
+
+       reportRequest.setParameterNameValues(pNameValue);
+            sreq.setReportRequest(reportRequest);
+            sreq.setSaveDataOption(true);
+            sreq.setScheduleBurstringOption(false);
+            sreq.setSchedulePublicOption(true);
+            sreq.setUserJobName("TEST");
+            
+            try {
+                ReportResponse response = new ReportResponse();
+                response =
+                        publicReportService.runReport(reportRequest, userName,
+                                                      passWord);
+                str = response.getReportBytesAsString();
+                System.err.println("====ITEM====" + str);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                DocumentBuilder db =
+                    DocumentBuilderFactory.newInstance().newDocumentBuilder();
+                InputSource is = new InputSource();
+                is.setCharacterStream(new StringReader(str));
+                Document doc = db.parse(is);
+                NodeList nodes = doc.getElementsByTagName("G_1");
+                for (int i = 0; i < nodes.getLength(); i++) {
+                    Node nNode = nodes.item(i);
+                    if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+                        Element element = (Element)nNode;
+
+                        Double BUDGET_VALUE_Obj;
+                        if (element.getElementsByTagName("BUDGET_VALUE").item(0).getChildNodes().getLength() >
+                            0) {
+                            BUDGET_VALUE_Obj =
+                                    Double.valueOf(element.getElementsByTagName("BUDGET_VALUE").item(0).getTextContent().toString());
+                        } else {
+                            BUDGET_VALUE_Obj = null;
+
+                        }
+
+//                        Long TASK_ID_Obj;
+//                        if (element.getElementsByTagName("TASK_ID").item(0).getChildNodes().getLength() >
+//                            0) {
+//                            TASK_ID_Obj =
+//                                    Long.valueOf(element.getElementsByTagName("TASK_ID").item(0).getTextContent().toString());
+//                        } else {
+//                            TASK_ID_Obj = null;
+//
+//                        }
+//
+//                        Long BUDGET_QUANTITY_Obj;
+//                        if (element.getElementsByTagName("BUDGET_QUANTITY").item(0).getChildNodes().getLength() >
+//                            0) {
+//                            BUDGET_QUANTITY_Obj =
+//                                    Long.valueOf(element.getElementsByTagName("BUDGET_QUANTITY").item(0).getTextContent().toString());
+//                        } else {
+//                            BUDGET_QUANTITY_Obj = null;
+//
+//                        }
+//
+//
+//                        Long BUDGET_VALUE_Obj;
+//                        if (element.getElementsByTagName("BUDGET_VALUE").item(0).getChildNodes().getLength() >
+//                            0) {
+//                            BUDGET_VALUE_Obj =
+//                                    Long.valueOf(element.getElementsByTagName("BUDGET_VALUE").item(0).getTextContent().toString());
+//                        } else {
+//                            BUDGET_VALUE_Obj = null;
+//
+//                        }
+//
+//                        Long PO_VALUE_Obj;
+//                        if (element.getElementsByTagName("PO_VALUE").item(0).getChildNodes().getLength() >
+//                            0) {
+//                            PO_VALUE_Obj =
+//                                    Long.valueOf(element.getElementsByTagName("PO_VALUE").item(0).getTextContent().toString());
+//                        } else {
+//                            PO_VALUE_Obj = null;
+//
+//                        }
+//
+//                        Long AVAILABLE_VALUE_Obj;
+//                        if (element.getElementsByTagName("AVAILABLE_VALUE").item(0).getChildNodes().getLength() >
+//                            0) {
+//                            AVAILABLE_VALUE_Obj =
+//                                    Long.valueOf(element.getElementsByTagName("AVAILABLE_VALUE").item(0).getTextContent().toString());
+//                        } else {
+//                            AVAILABLE_VALUE_Obj = null;
+//
+//                        }
+//
+//
+//                        projectBudgetList.add(new ProjectBudget((element.getElementsByTagName("PROJECT_NAME").item(0).getTextContent() !=
+//                                                                 null ?
+//                                                                 element.getElementsByTagName("PROJECT_NAME").item(0).getTextContent().toString() :
+//                                                                 null),
+//                                                                PROJECT_ID_Obj,
+//                                                                TASK_ID_Obj,
+//                                                                BUDGET_QUANTITY_Obj,
+//                                                                BUDGET_VALUE_Obj,
+//                                                                PO_VALUE_Obj,
+//                                                                AVAILABLE_VALUE_Obj));
+//
+                      budgetAmt=BUDGET_VALUE_Obj;
+                    }
+                }
+            } catch (Exception e) {
+                System.err.println("===BUDGET_VALUE===" + e);
+            }
+//        }
+        return budgetAmt;
+    }
+
+
+    //*********************************************************************************//
+
+    //****************************GL CODE COMB*****************************************************//
+
+    public List<GLCodeComb> populateCodeComb(String searchCodeCombname) {
+        String str = null;
+        ScheduleRequest sreq = new ScheduleRequest();
+        PublicReportServiceService publicReportServiceService =
+            new PublicReportServiceService();
+        PublicReportService publicReportService =
+            publicReportServiceService.getPublicReportService();
+        ReportRequest reportRequest = new ReportRequest();
+        reportRequest.setAttributeFormat("xml");
+        reportRequest.setAttributeLocale("en-US");
+        reportRequest.setAttributeTemplate("Simple");
+        reportRequest.setByPassCache(true);
+        reportRequest.setSizeOfDataChunkDownload(-1);
+        reportRequest.setReportAbsolutePath(glCodeCombPath);
+        reportRequest.setParameterNameValues(null);
+        sreq.setReportRequest(reportRequest);
+        sreq.setSaveDataOption(true);
+        sreq.setScheduleBurstringOption(false);
+        sreq.setSchedulePublicOption(true);
+        sreq.setUserJobName("TEST");
+        try {
+            ReportResponse response = new ReportResponse();
+            response =
+                    publicReportService.runReport(reportRequest, userName, passWord);
+            str = response.getReportBytesAsString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            DocumentBuilder db =
+                DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            InputSource is = new InputSource();
+            is.setCharacterStream(new StringReader(str));
+            Document doc = db.parse(is);
+            NodeList nodes = doc.getElementsByTagName("G_1");
+            for (int i = 0; i < nodes.getLength(); i++) {
+                Node nNode = nodes.item(i);
+                if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+                    Element element = (Element)nNode;
+                    Long CODE_COMBINATION_ID_Obj;
+                    if (element.getElementsByTagName("CODE_COMBINATION_ID").item(0).getChildNodes().getLength() >
+                        0) {
+                        CODE_COMBINATION_ID_Obj =
+                                Long.valueOf(element.getElementsByTagName("CODE_COMBINATION_ID").item(0).getTextContent().toString());
+                    } else {
+                        CODE_COMBINATION_ID_Obj = null;
+
+                    }
+                    
+                    String AccoCode=(element.getElementsByTagName("ACCOUNT_CODE").item(0).getTextContent() !=
+                                     null ?element.getElementsByTagName("ACCOUNT_CODE").item(0).getTextContent().toString() :
+                                      null);
+                    
+                    if(searchCodeCombname!=null){
+                        if(AccoCode!=null && AccoCode.startsWith(searchCodeCombname)){
+                            
+                     glCodeComb.add(new GLCodeComb(
+                                                CODE_COMBINATION_ID_Obj, AccoCode,
+                                                (element.getElementsByTagName("ACCOUNT_DESC").item(0).getTextContent() !=
+                                                 null ? element.getElementsByTagName("ACCOUNT_DESC").item(0).getTextContent().toString() :
+                                                 null)));  
+                        }
+                        
+                    }else{
+                            glCodeComb.add(new GLCodeComb(
+                                                       CODE_COMBINATION_ID_Obj, AccoCode,
+                                                       (element.getElementsByTagName("ACCOUNT_DESC").item(0).getTextContent() !=
+                                                        null ? element.getElementsByTagName("ACCOUNT_DESC").item(0).getTextContent().toString() :
+                                                        null)));    
+                        }
+                    }
+            }
+        } catch (Exception e) {
+            System.err.println("===BusinessUnit===" + e);
+        }
+        return glCodeComb;
+    }
+
+}
