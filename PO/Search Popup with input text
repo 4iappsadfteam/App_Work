@@ -1,4 +1,18 @@
-Search:-LOV 
+Search:-LOV + Popup Table
+
+*************************Pop up table Mapping****************************************
+<af:table 
+var="row" rowBandingInterval="0" id="t4"
+value="#{viewScope.backing_PopulateLineValues.projectstList}"
+			partialTriggers="::cil1"
+			columnStretching="last"
+			rowSelection="single">
+			<af:column sortable="false"
+			headerText="Project Number" id="c1">
+<af:outputText value="#{row.PROJECT_NUMBER}"
+                	id="ot3"/>
+
+
 
 ************************************************************************************************	   
    List<Supplier> SupplierList = new ArrayList();
