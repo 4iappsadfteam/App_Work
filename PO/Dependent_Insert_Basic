@@ -1,0 +1,50 @@
+
+    public void onClickRowDuplicate(ActionEvent actionEvent) {
+        
+        ViewObject lineVO =ADFUtils.findIterator("XxemsCustPoLines_VO2Iterator").getViewObject();
+        ViewObject schVO =ADFUtils.findIterator("XxemsCustPoLineSched_VO1Iterator").getViewObject();
+        ViewObject distVO = ADFUtils.findIterator("XxemsCustPoLineDist_VO1Iterator").getViewObject();
+        
+        
+        long lineNuum_new = 0;
+        long Count = lineVO.getEstimatedRowCount();
+        Row r = lineVO.getCurrentRow();
+        Row newLineRow = lineVO.createRow();
+//        lineNuum_new = Count + 1;
+        System.err.println("==Count--new=======" + lineNuum_new);
+        r.setAttribute("LineNumber", r.getAttribute("LineNumber"));
+//        newLineRow.setAttribute("LineNumber", lineNuum_new);
+        newLineRow.setAttribute("CpoHeaderId", r.getAttribute("CpoHeaderId"));
+        
+        Object lineId=newLineRow.getAttribute("CpoLineId");
+        System.err.println("---------------lineId--------"+lineId);
+//        newLineRow.setAttribute("PoLineId", r.getAttribute("PoLineId"));
+//        newLineRow.setAttribute("PoHeaderId", r.getAttribute("PoHeaderId"));
+        lineVO.insertRow(newLineRow);
+        lineVO.setCurrentRow(r);
+        schVO.executeQuery();
+        RowSetIterator schRS = schVO.createRowSetIterator(null);
+            while (schRS.hasNext()) {
+                System.err.println("----------SCHE---------IN");
+                Row r2 = schRS.next();
+                Row newSchRow=schVO.createRow();
+                newSchRow.setAttribute("CpoHeaderId", r2.getAttribute("CpoHeaderId"));
+                newSchRow.setAttribute("CpoLineId",lineId);
+                
+                Object schId=newSchRow.getAttribute("CpoScheduleId");
+                System.err.println("*****schId*********"+schId);
+                schVO.insertRow(newSchRow);
+                schVO.setCurrentRow(r2);
+                distVO.executeQuery();
+                RowSetIterator disRS = distVO.createRowSetIterator(null);
+                    while (disRS.hasNext()) {
+                       System.err.println("----------Dist---------IN");
+                        Row r3 = disRS.next();
+                        Row newDistRow=distVO.createRow();
+                        newDistRow.setAttribute("CpoHeaderId", r3.getAttribute("CpoHeaderId"));
+                        newDistRow.setAttribute("CpoScheduleId",schId);
+                        distVO.insertRow(newDistRow);
+                    }
+            }
+
+    }
