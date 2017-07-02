@@ -1,0 +1,129 @@
+
+
+    public void onClickRowDuplicate(ActionEvent actionEvent) {
+        
+        ViewObject lineVO =ADFUtils.findIterator("XxemsCustPoLines_VO2Iterator").getViewObject();
+        ViewObject schVO =ADFUtils.findIterator("XxemsCustPoLineSched_VO1Iterator").getViewObject();
+        ViewObject distVO = ADFUtils.findIterator("XxemsCustPoLineDist_VO1Iterator").getViewObject();
+        
+        
+        long lineNuum_new = 0;
+        long Count = lineVO.getEstimatedRowCount();
+        lineNuum_new = Count + 1;
+        Row r = lineVO.getCurrentRow();
+        Row newLineRow = lineVO.createRow();
+        
+        r.setAttribute("LineNumber", r.getAttribute("LineNumber"));
+        newLineRow.setAttribute("LineNumber", lineNuum_new);
+        Object lineId=newLineRow.getAttribute("CpoLineId");
+        newLineRow.setAttribute("CpoHeaderId", r.getAttribute("CpoHeaderId"));
+        newLineRow.setAttribute("PoLineId", r.getAttribute("PoLineId"));
+        newLineRow.setAttribute("PoHeaderId",r.getAttribute("PoHeaderId"));
+        newLineRow.setAttribute("LineTypeId",r.getAttribute("LineTypeId"));
+        newLineRow.setAttribute("ItemId",r.getAttribute("ItemId"));
+        newLineRow.setAttribute("CategoryId",r.getAttribute("CategoryId"));
+        newLineRow.setAttribute("Quantity",r.getAttribute("Quantity"));
+        newLineRow.setAttribute("UnitPrice",r.getAttribute("UnitPrice"));
+        newLineRow.setAttribute("TotalTax",r.getAttribute("TotalTax"));
+        newLineRow.setAttribute("ProjectId",r.getAttribute("ProjectId"));
+        newLineRow.setAttribute("TaskId",r.getAttribute("TaskId"));
+        newLineRow.setAttribute("LineType",r.getAttribute("LineType"));
+        newLineRow.setAttribute("ItemNum",r.getAttribute("ItemNum"));
+        newLineRow.setAttribute("ItemRevision",r.getAttribute("ItemRevision"));
+        newLineRow.setAttribute("ItemDesc",r.getAttribute("ItemDesc"));
+        newLineRow.setAttribute("CategoryName",r.getAttribute("CategoryName"));
+        newLineRow.setAttribute("Uom", r.getAttribute("Uom"));
+        newLineRow.setAttribute("ProjectNumber",r.getAttribute("ProjectNumber"));
+        newLineRow.setAttribute("ProjectName",r.getAttribute("ProjectName"));
+        newLineRow.setAttribute("TaskNumber",r.getAttribute("TaskNumber"));
+        newLineRow.setAttribute("TaskName",r.getAttribute("TaskName"));
+        newLineRow.setAttribute("LineTypeCode",r.getAttribute("LineTypeCode"));
+        System.err.println("---------------lineId--------"+lineId);
+        lineVO.insertRow(newLineRow);
+        lineVO.setCurrentRow(r);
+        schVO.executeQuery();
+                
+        long newShipCount=0;
+        long newDistCount=0;
+        long shipcount=shipVO.getEstimatedRowCount();
+        RowSetIterator schRS = schVO.createRowSetIterator(null);
+            while (schRS.hasNext()) {
+                System.err.println("----------SCHE---------IN");
+                newShipCount=shipcount+1;
+                Row r2 = schRS.next();
+                Row newSchRow=schVO.createRow();
+                Object schId=newSchRow.getAttribute("CpoScheduleId");
+                newSchRow.setAttribute("CpoHeaderId", r2.getAttribute("CpoHeaderId"));
+                newSchRow.setAttribute("CpoLineId",lineId);
+                
+                newSchRow.setAttribute("PoHeaderId", r2.getAttribute("PoHeaderId"));
+                newSchRow.setAttribute("Trans_Item", r2.getAttribute("Trans_Item"));
+                newSchRow.setAttribute("PoLineId", r2.getAttribute("PoLineId"));
+                newSchRow.setAttribute("PoScheduleId", r2.getAttribute("PoScheduleId"));
+                newSchRow.setAttribute("ScheduleNumber", newShipCount);
+
+                newSchRow.setAttribute("ShipToLocationId", r2.getAttribute("ShipToLocationId"));
+                newSchRow.setAttribute("ShipToLocationCode", r2.getAttribute("ShipToLocationCode"));
+                newSchRow.setAttribute("ShipToOrgId", r2.getAttribute("ShipToOrgId"));
+                newSchRow.setAttribute("ShipToOrgCode", r2.getAttribute("ShipToOrgCode"));
+                newSchRow.setAttribute("ShipToOrgName", r2.getAttribute("ShipToOrgName"));
+                
+                newSchRow.setAttribute("ShipQuantity", r2.getAttribute("ShipQuantity"));
+                newSchRow.setAttribute("Trans_UOM", r2.getAttribute("Trans_UOM"));
+                newSchRow.setAttribute("UomCode", r2.getAttribute("UomCode"));
+                newSchRow.setAttribute("NeedByDate", r2.getAttribute("NeedByDate"));
+                newSchRow.setAttribute("DestinationTypeCode", r2.getAttribute("DestinationTypeCode"));
+                
+                newSchRow.setAttribute("PromisedDate", r2.getAttribute("PromisedDate"));
+                newSchRow.setAttribute("DestinationType", r2.getAttribute("DestinationType"));
+                newSchRow.setAttribute("SubinventoryCode", r2.getAttribute("SubinventoryCode"));
+                newSchRow.setAttribute("IdentityFlag", r2.getAttribute("IdentityFlag"));
+                
+                
+                System.err.println("*****schId*********"+schId);
+                schVO.insertRow(newSchRow);
+                schVO.setCurrentRow(r2);
+                distVO.executeQuery();
+                long distcount=distVO.getEstimatedRowCount();
+                RowSetIterator disRS = distVO.createRowSetIterator(null);
+                    while (disRS.hasNext()) {
+                       System.err.println("----------Dist---------IN");
+                        Row r3 = disRS.next();
+                        newDistCount=distcount+1;
+                        Row newDistRow=distVO.createRow();
+                        
+                        newDistRow.setAttribute("CpoHeaderId", r3.getAttribute("CpoHeaderId"));
+                        newDistRow.setAttribute("CpoScheduleId",schId);
+                        newDistRow.setAttribute("CpoLineId",lineId);
+                        newDistRow.setAttribute("DistNum", newDistCount);
+                        
+                        newDistRow.setAttribute("PoHeaderId", r3.getAttribute("PoHeaderId"));
+                        newDistRow.setAttribute("PoLineId", r3.getAttribute("PoLineId"));
+                        newDistRow.setAttribute("PoScheduleId", r3.getAttribute("PoScheduleId"));
+                        newDistRow.setAttribute("ChargeAccId", r3.getAttribute("ChargeAccId"));
+                        newDistRow.setAttribute("ChargeAccCode", r3.getAttribute("ChargeAccCode"));
+                        
+                        newDistRow.setAttribute("ChargeAccName", r3.getAttribute("ChargeAccName"));
+                        newDistRow.setAttribute("ProjectId", r3.getAttribute("ProjectId"));
+                        newDistRow.setAttribute("ProjectCode", r3.getAttribute("ProjectCode"));
+                        newDistRow.setAttribute("ProjectName", r3.getAttribute("ProjectName"));
+                        newDistRow.setAttribute("TaskId", r3.getAttribute("TaskId"));
+                        
+                        newDistRow.setAttribute("TaskCode", r3.getAttribute("TaskCode"));
+                        newDistRow.setAttribute("TaskName", r3.getAttribute("TaskName"));
+                        newDistRow.setAttribute("ExpendItemDate", r3.getAttribute("ExpendItemDate"));
+                        newDistRow.setAttribute("ExpendTypeId", r3.getAttribute("ExpendTypeId"));
+                        newDistRow.setAttribute("ExpendTypeCode", r3.getAttribute("ExpendTypeCode"));
+                        
+                        newDistRow.setAttribute("ExpendTypeName", r3.getAttribute("ExpendTypeName"));
+                        newDistRow.setAttribute("OrgId", r3.getAttribute("OrgId"));
+                        newDistRow.setAttribute("OrgIdName", r3.getAttribute("OrgIdName"));
+                        newDistRow.setAttribute("IdentityFlag", r3.getAttribute("IdentityFlag"));
+                        
+                        
+                        distVO.insertRow(newDistRow);
+                    }
+            }
+        schVO.executeQuery();
+        distVO.executeQuery();
+    }
