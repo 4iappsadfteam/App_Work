@@ -1,0 +1,31 @@
+
+Line data
+      ship
+         dis-(Line Data)
+
+
+
+
+
+    public void onChangeProject(ValueChangeEvent valueChangeEvent) {
+        valueChangeEvent.getComponent().processUpdates(FacesContext.getCurrentInstance());
+               System.err.println("===OLD VALUE==="+valueChangeEvent.getOldValue());
+               System.err.println("===NEW Value==="+valueChangeEvent.getNewValue());
+                       
+               if(valueChangeEvent.getNewValue()!=null){
+                RowSetIterator rs = lineVo.createRowSetIterator(null);
+                while(rs.hasNext()){
+                    Row cu = rs.next();
+                    RowSetIterator schRS = shipVO.createRowSetIterator(null);
+                         while (schRS.hasNext()) {
+                             System.err.println("----------SCHE---------IN");
+                             Row r2 = schRS.next();
+                             RowSetIterator disRS = distVO.createRowSetIterator(null);
+                                    while (disRS.hasNext()) {
+                                           Row r3 = disRS.next();
+                                            r3.setAttribute("ProjectId",cu.getAttribute("ProjectId"));
+                                            r3.setAttribute("ProjectCode", cu.getAttribute("ProjectNumber"));
+                                            r3.setAttribute("ProjectName", cu.getAttribute("ProjectName"));
+                                           }
+                         }
+                }
