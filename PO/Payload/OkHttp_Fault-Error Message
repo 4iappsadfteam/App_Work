@@ -1,0 +1,159 @@
+Payload Response_Fault Mesage
+
+
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.StringReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+import oracle.jbo.Row;
+import oracle.jbo.ViewObject;
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+
+*******************************************************************************
+    protected String pushOrder(String xmlData) throws MalformedURLException,
+                                                      IOException,SAXException,ParserConfigurationException {
+        String outputStringXML = "";
+        
+        String xmlInput = getOrderDataAsXML(xmlData);
+        xmlInput = xmlInput.replaceAll("&", "&amp;");
+        OkHttpClient client = new OkHttpClient();
+        
+        MediaType mediaType = MediaType.parse("text/xml");
+        RequestBody body = RequestBody.create(mediaType, xmlInput);
+        Request request =
+            new Request.Builder().url("https://" + pod + ".prc.em2.oraclecloud.com/?wsdl")
+			.post(body).addHeader("content-type", "text/xml")
+			.addHeader("cache-control","no-cache").build();
+
+        Response response = client.newCall(request).execute();
+
+        InputStream isr = response.body().byteStream();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(isr));
+        StringBuilder out = new StringBuilder();
+        String resultsXml;
+        while ((resultsXml = reader.readLine()) != null) {
+            out.append(resultsXml);
+        }
+
+        int responseCode = response.code(); 
+        // System.err.println("-----responseCode----"+responseCode);
+        if (responseCode > 200) {
+       if(out.toString().contains(";TEXT&gt;"))
+       {
+            String fault = getFaultString(out.toString());
+            //System.err.println("-----==fault==----"+fault);
+            StringBuilder builder = new StringBuilder("<html> <body>");
+            builder.append("Error Message from ERP :"+" <b style=\"color:#ef0404\">"+fault+"</b></body></html>");
+            JSFUtils.addFacesInformationMessage(builder.toString());
+       }
+       else{
+           DocumentBuilder builder =
+                           DocumentBuilderFactory.newInstance().newDocumentBuilder();
+                       InputSource src = new InputSource();
+                       src.setCharacterStream(new StringReader(out.toString()));
+                       Document doc = builder.parse(src);
+                     String fault = doc.getElementsByTagName("faultstring").item(0).getTextContent();
+           StringBuilder builder1 = new StringBuilder("<html> <body>");
+           builder1.append("Error Message from ERP :"+" <b style=\"color:#ef0404\">"+fault+"</b></body></html>");
+           JSFUtils.addFacesInformationMessage(builder1.toString());
+       }
+           
+        } else {
+            String poNum = getPONumber(out.toString());
+            String poHead = getPOHeaderID(out.toString());
+                
+            Row r = headVo.getCurrentRow();
+            r.setAttribute("PoHeaderId", poHead);
+            r.setAttribute("PoNumber",poNum);
+            ADFUtils.findOperation("Commit").execute();
+           
+           
+            StringBuilder builder = new StringBuilder("<html> <body>");
+            builder.append("<p>PO Created Successfully.</p>");
+            builder.append("PO Number :<b style=\"color:#1367ae\">" +
+                           poNum + "</b>" + "</body> </html>");
+            JSFUtils.addFacesInformationMessage(builder.toString());
+            
+        }
+
+        reader.close();
+        JSFUtils.addFacesInformationMessage("Purchase Order Details Saved Successfully");
+        return outputStringXML;
+
+    }
+	
+********************************************************************************************
+
+    public static String getFaultString(String xml) {
+        String faultString = "";
+        try {
+            System.err.println("===ERRORR======="+xml);
+
+        int firstFault=xml.indexOf(";TEXT&gt;");
+        int firstFault_last=xml.indexOf("&lt;/TEXT&");
+            
+        System.err.println("begin fault message==="+firstFault);
+        System.err.println("last fault message==="+firstFault_last);
+        System.out.println("==RESULT==="+xml.substring(firstFault+9, firstFault_last));   
+        faultString=xml.substring(firstFault+9, firstFault_last);
+        System.err.println("---faultString-------"+faultString);
+                
+        } catch (Exception e) {
+
+        }
+        return faultString;
+    }
+	
+********************************************************************************************
+    public static String getPONumber(String xml) {
+        String faultString = "";
+        try {
+            DocumentBuilder builder =
+                DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            InputSource src = new InputSource();
+            src.setCharacterStream(new StringReader(xml));
+            Document doc = builder.parse(src);
+            faultString =
+                    doc.getElementsByTagName("OrderNumber").item(0).getTextContent();
+
+        } catch (Exception e) {
+
+        }
+        return faultString;
+    }
+
+********************************************************************************************
+    public static String getPOHeaderID(String xml) {
+        String faultString = "";
+        try {
+            DocumentBuilder builder =
+                DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            InputSource src = new InputSource();
+            src.setCharacterStream(new StringReader(xml));
+            Document doc = builder.parse(src);
+            faultString =
+                    doc.getElementsByTagName("POHeaderId").item(0).getTextContent();
+
+        } catch (Exception e) {
+
+        }
+        return faultString;
+    }
+
+	
+	
