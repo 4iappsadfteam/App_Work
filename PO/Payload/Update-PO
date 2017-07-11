@@ -1,0 +1,225 @@
+
+
+
+    public void invokeChangePO() throws Exception {
+        UpdatePOHeader poHeader = new UpdatePOHeader("test", "Shine.ae",
+                               "welcome123");
+        String response = null;
+        changePO po = new changePO();
+        po.setHeaderID(Long.valueOf(headVo.getCurrentRow().getAttribute("HeaderId").toString()));
+		String payload = po.getChangePOPayload();
+        System.err.println("===Inv==BODY===");
+        
+        try {
+
+            response = poHeader.getAndPushOrder(payload);
+            System.err.println("===Inv==2=res" + response);
+
+        } catch (Exception e) {
+            System.err.println("===EXE===" + e.toString());
+
+        }
+
+    }
+*********************************************************************************
+	  
+	  public String getAndPushOrder(String payloadXML) throws Exception {
+        String responseXML;
+        responseXML = pushOrder(payloadXML);
+        return responseXML;
+    }
+	
+
+*******************************************************************************
+    protected String pushOrder(String xmlData) throws MalformedURLException,
+                                                      IOException,
+                                                      ParserConfigurationException,
+                                                      SAXException {
+        String outputStringXML = "";
+        
+        String xmlInput = getOrderDataAsXML(xmlData);
+        xmlInput = xmlInput.replaceAll("&", "&amp;");
+        
+        OkHttpClient client = new OkHttpClient();
+        MediaType mediaType = MediaType.parse("text/xml");
+        RequestBody body = RequestBody.create(mediaType, xmlInput);
+        Request request =
+            new Request.Builder().url("https://" + pod + ".prc.em2.oraclecloud.com/prcPoEditDocumentOrder/PurchaseOrderServiceV2?wsdl").post(body).addHeader("content-type",
+                                                                                                                                                             "text/xml").addHeader("cache-control",
+                                                                                                                                                                                   "no-cache").build();
+        
+        
+        Response response = client.newCall(request).execute();
+
+        InputStream isr = response.body().byteStream();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(isr));
+        StringBuilder out = new StringBuilder();
+        String resultsXml;
+        while ((resultsXml = reader.readLine()) != null) {
+            out.append(resultsXml);
+        }
+
+        int responseCode = response.code(); 
+        System.err.println("-----Update responseCode----"+responseCode);
+        if (responseCode > 200) {
+           
+            if(out.toString().contains(";TEXT&gt;")){
+                 String fault = getUpdateFaultString(out.toString());
+                 System.err.println("-----Update==fault==----"+fault);
+                 
+                 StringBuilder builder = new StringBuilder("<html> <body>");
+                 builder.append("Error Message from ERP :"+" <b style=\"color:#ef0404\">"+fault+"</b></body></html>");
+                 JSFUtils.addFacesInformationMessage(builder.toString());
+             }
+             else{
+                  DocumentBuilder builder =DocumentBuilderFactory.newInstance().newDocumentBuilder();
+                  InputSource src = new InputSource();
+                  src.setCharacterStream(new StringReader(out.toString()));
+                  Document doc = builder.parse(src);
+                  String fault = doc.getElementsByTagName("faultstring").item(0).getTextContent();
+                  StringBuilder builder1 = new StringBuilder("<html> <body>");
+                  builder1.append("Error Message from ERP :"+" <b style=\"color:#ef0404\">"+fault+"</b></body></html>");
+                  JSFUtils.addFacesInformationMessage(builder1.toString());
+                 }
+           
+        } else {
+            String changePONum = getUpdatePONumber(out.toString());
+            
+            Row r = headVo.getCurrentRow();
+           // r.setAttribute("PoHeaderId", poHead);
+            r.setAttribute("ChangeOrdNum",changePONum);
+            ADFUtils.findOperation("Commit").execute();
+            
+            StringBuilder builder = new StringBuilder("<html> <body>");
+            builder.append("<p>Updated PO Saved Successfully.</p>");
+            builder.append("Updated PO Number :<b style=\"color:#1367ae\">" +
+                           changePONum + "</b>" + "</body> </html>");
+            JSFUtils.addFacesInformationMessage(builder.toString());
+            
+        }
+        JSFUtils.addFacesInformationMessage("Purchase Order Details Saved Successfully");
+        reader.close();
+        
+        /*
+        try
+        {
+        
+        String wsURL =
+            "https://" + pod + ".prc.em2.oraceV2?wsdl";
+        System.out.println(wsURL);
+        URL url = new URL(wsURL);
+        URLConnection connection = url.openConnection();
+        HttpURLConnection httpConn = (HttpURLConnection)connection;
+        ByteArrayOutputStream bout = new ByteArrayOutputStream();
+
+        String xmlInput = getOrderDataAsXML(xmlData);
+        xmlInput = xmlInput.replaceAll("&", "&amp;");
+        byte[] buffer;
+        buffer = new byte[xmlInput.length()];
+        buffer = xmlInput.getBytes();
+        bout.write(buffer);
+        byte[] b = bout.toByteArray();
+        httpConn.setRequestProperty("Content-Length",
+                                    String.valueOf(b.length));
+        httpConn.setRequestProperty("Content-Type",
+                                    "text/xml;charset=\"utf-8\"");
+        httpConn.setRequestProperty("Accept", "text/xml");
+        httpConn.setRequestProperty("SOAPAction",
+                                    "http://xmlns.oracle.com/apps/prc/pseOrder");
+        httpConn.setUseCaches(false);
+        httpConn.setDoOutput(true);
+        httpConn.setDoInput(true);
+        OutputStream out = httpConn.getOutputStream();
+        out.write(b);
+        out.close();
+            System.err.println("====OUTPUT===="+httpConn.getContentType()+"==="+httpConn.getContent()+"====="+httpConn.getResponseMessage()+"===="+httpConn.getResponseCode()+"======");
+        InputStreamReader isr =
+            new InputStreamReader(httpConn.getInputStream());
+        BufferedReader in = new BufferedReader(isr);
+        String responseString = "";
+        while ((responseString = in.readLine()) != null) {
+            System.out.println("------------" + responseString);
+            outputStringXML = outputStringXML + responseString;
+        }
+        }
+        catch(Exception e) {
+            
+        }
+        
+       */ 
+        
+        
+        return outputStringXML;
+    }
+    
+    
+*******************************************************************************    
+    public static String getUpdateFaultString(String xml) {
+        String faultString = "";
+        try {
+            System.err.println("===Update fault ERRORR======="+xml);
+        
+        int firstFault=xml.indexOf(";TEXT&gt;");
+        int firstFault_last=xml.indexOf("&lt;/TEXT&");
+            
+        System.err.println("Update==begin fault message==="+firstFault);
+        System.err.println("Update====last fault message==="+firstFault_last);
+        System.out.println("==Update===RESULT==="+xml.substring(firstFault+9, firstFault_last));   
+        faultString=xml.substring(firstFault+9, firstFault_last);
+        System.err.println("---Update faultString-------"+faultString);
+                
+        } catch (Exception e) {
+
+        }
+        return faultString;
+    }
+
+*******************************************************************************
+    public static String getUpdatePONumber(String xml) {
+        String faultString = "";
+        try {
+            DocumentBuilder builder =
+                DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            InputSource src = new InputSource();
+            src.setCharacterStream(new StringReader(xml));
+            Document doc = builder.parse(src);
+            faultString =
+                    doc.getElementsByTagName("ChangeOrderNumber").item(0).getTextContent();
+
+        } catch (Exception e) {
+
+        }
+        return faultString;
+    }
+    
+	
+*******************[Header + Body]***************************************	
+	    private String getOrderDataAsXML(String xmlData) {
+        String xml = "";
+        try
+        {
+        Date date = new Date();
+        SimpleDateFormat dateFormat =
+            new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.000'Z'"); //Hours:Minutes:Seconds
+        dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+        long t = date.getTime();
+        Date expDate = new Date(t + (10 * 60000));
+
+        String createdTS = dateFormat.format(date);
+        String expiresTS = dateFormat.format(expDate);
+
+        xml +=
+"<soapenv:Envelope xmlns:soapenv=\"http:// xmapps/prc/po/editDocument/flex/draftPurchasingDocumentHeader/\">\n" +
+                "   <soapenv:Header>\n" +
+                
+                "      </wsse:Security>\n" +
+                "   </soapenv:Header>" + xmlData;
+        System.err.println("===XML==" + xml);
+        }
+        catch(Exception e) {
+            
+        }
+        return xml;
+    }
+	
