@@ -1,0 +1,22 @@
+   
+   public void searchFindACL(ActionEvent actionEvent) {
+        if(it2.getValue()!=null){
+        ViewObject conHdrVO = ADFUtils.findIterator("Iterator").getViewObject();
+        ViewCriteria vc  = conHdrVO.createViewCriteria();
+        ViewCriteriaRow vcr =  vc.createViewCriteriaRow();
+        vcr.setAttribute("column name", "like %"+it2.getValue()+"%");
+        vc.addRow(vcr);
+        conHdrVO.applyViewCriteria(vc);
+        conHdrVO.executeQuery();
+        }
+        else{
+            ViewObject conHdrVO = ADFUtils.findIterator("Iterator").getViewObject();
+            ViewCriteria vc  = conHdrVO.createViewCriteria();
+            ViewCriteriaRow vcr =  vc.createViewCriteriaRow();
+            vcr.setAttribute("column name", "");
+            vc.addRow(vcr);
+            conHdrVO.applyViewCriteria(vc);
+            conHdrVO.executeQuery();
+        }
+        AdfFacesContext.getCurrentInstance().addPartialTarget(t4);
+    }
