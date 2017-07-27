@@ -12,3 +12,14 @@ Type: action
 
 AM: adf.context.pageFlowScope.varNum
 ____________________________________________________________________________________
+Transient Edit:
+
+if(ContractHeaderID_VA_E.first() !=null && ContractHeaderId !=null)
+{ContractHeaderID_VA_E.first().getAttribute("ContractNum");
+}
+else
+{
+return null;
+}
+
+____________________________________________________________________________________
