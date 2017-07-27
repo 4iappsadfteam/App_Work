@@ -2,3 +2,13 @@ Dash Board Button:
 margin-right:13px;margin-top:10px;
 ______________________________________________
 Inuput Content: width:200px;
+__________________________________________
+Search Edit
+Link Color: font-weight:bolder; font-size:small; color:#1367AE; 
+
+From: #{bindings.VariationNumber.inputValue}
+TO  : #{pageFlowScope.variationNum}
+Type: action
+
+AM: adf.context.pageFlowScope.varNum
+____________________________________________________________________________________
