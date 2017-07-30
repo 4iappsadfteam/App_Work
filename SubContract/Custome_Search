@@ -20,3 +20,26 @@
         }
         AdfFacesContext.getCurrentInstance().addPartialTarget(t4);
     }
+
+
+______________________________________________________________________________________
+
+Jspx --page
+
+<af:resource type="javascript">
+        function submitForm(event) {
+        if (event.getKeyCode() == AdfKeyStroke.ENTER_KEY) {
+            var source = event.getSource();
+            var myButton = source.findComponent("cb1");
+            var actionEvent = new AdfActionEvent(myButton);
+            actionEvent.forceFullSubmit();
+            actionEvent.noResponseExpected();
+            actionEvent.queue();
+        }
+    }    
+    </af:resource>
+    
+  Fragment:
+  InputText: <af:clientListener type="keyPress" method="submitForm"/>
+  
+    
