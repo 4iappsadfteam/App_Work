@@ -41,5 +41,4 @@ Jspx --page
     
   Fragment:
   InputText: <af:clientListener type="keyPress" method="submitForm"/>
-  
-    
+______________________________________________________________________________________
