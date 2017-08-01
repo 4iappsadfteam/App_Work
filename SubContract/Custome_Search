@@ -42,3 +42,13 @@ Jspx --page
   Fragment:
   InputText: <af:clientListener type="keyPress" method="submitForm"/>
 ______________________________________________________________________________________
+Edit stage--Disable
+
+Set Property Listener
+From  : #{'edit'}
+To    : #{pageFlowScope.addEdit}
+Action: action  
+2 task Flow need to linnk
+Condition: #{pageFlowScope.addEdit eq 'edit'}
+______________________________________________________________________________________
+
