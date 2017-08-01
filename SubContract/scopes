@@ -1,0 +1,10 @@
+
+PageFlowScope___________________________________________________________________________________
+Edit check
+        if (ADFContext.getCurrent().getPageFlowScope().get("addEdit") !=
+            null &&
+            ADFContext.getCurrent().getPageFlowScope().get("addEdit").toString().equals("edit")) {
+            updateVariationLines();
+        }
+        
+_________________________________________________________________________________________________________
