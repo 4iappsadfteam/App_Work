@@ -1,0 +1,2 @@
+Run from directory where the Certificate is placed.
+keytool -importcert -file <certificate file> -keystore <Keystore name>.jks -storepass <keystore password>
