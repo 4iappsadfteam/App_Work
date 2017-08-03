@@ -1,0 +1,36 @@
+    
+    
+    public static long getDifferenceDaysBetweenTwoDates(oracle.jbo.domain.Date d1, oracle.jbo.domain.Date d2){
+        if(d1 != null && d2 != null){
+            return (d2.getValue().getTime() - d1.getValue().getTime())/(24 * 60 * 60 * 1000);
+            }
+        return 0;
+     }
+     
+  _____________________________________________
+  
+      public void endDateTOC(ValueChangeEvent valueChangeEvent) {
+        if(id5.getValue()!=null){
+            valueChangeEvent.getComponent().processUpdates(FacesContext.getCurrentInstance());
+            oracle.jbo.domain.Date st = (oracle.jbo.domain.Date)id2.getValue(); 
+            System.err.println("---JBO S Date==="+st);
+            oracle.jbo.domain.Date retDate = (oracle.jbo.domain.Date)id5.getValue(); 
+            System.err.println("---JBO Red Date==="+retDate);
+            long nDays=getDifferenceDaysBetweenTwoDates(st, retDate);
+            oracle.jbo.domain.Number noDays= new oracle.jbo.domain.Number(nDays);
+            System.err.println("======retDate no of Days======"+noDays);    
+            it27.setValue(noDays);
+           
+        }else{
+            valueChangeEvent.getComponent().processUpdates(FacesContext.getCurrentInstance());
+            oracle.jbo.domain.Date st = (oracle.jbo.domain.Date)id2.getValue(); 
+            System.err.println("---JBO S Date"+st);
+            oracle.jbo.domain.Date en = (oracle.jbo.domain.Date)valueChangeEvent.getNewValue();
+            System.err.println("---JBO E Date"+en);
+            long nDays=getDifferenceDaysBetweenTwoDates(st, en);
+            oracle.jbo.domain.Number noDays= new oracle.jbo.domain.Number(nDays);
+            System.err.println("======END no of Days======"+noDays);    
+            it27.setValue(noDays);
+        }
+    }
+     
