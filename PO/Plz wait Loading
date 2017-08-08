@@ -1,0 +1,16 @@
+JSFF(Fragment):
+              Button + Client Listner
+
+JSPx:
+1. Loading Popup
+2. Resource tag</>----inside (loading)
+_____________________________________________
+function loading(evt) {
+            var millisecondsToWait = 3000;
+            var popup = AdfPage.PAGE.findComponentByAbsoluteId("p1");
+            popup.show();
+            setTimeout(function () {
+                popup.hide();
+            },
+            millisecondsToWait);
+        }
