@@ -1,0 +1,28 @@
+
+
+
+panelBox(height:550.0px; border-color:transparent;)
+		|
+		|__panelGroupLayout
+		|				  |__panelGroupLayout(horizontal)
+		|				  					|____ToolBar
+		|											|___input(place holder Name)
+		|											      |___Client Listner
+		|											|___Search Button
+		|											|___Spacer(w:895)
+		|											|___Create Button
+		|				  |__Spacer
+		|				  |__panelCollection(AFStretchWidth, height:440.0px;)
+		|				                   |__Table(AFStretchWidth, height:inherit; Scole: page0,7,0,25)			
+		|
+		|__panelDrawer(H:528; W:382; postion: Right)
+					|
+					|
+					|____Show Detail(border-color:transparent; Display Index=-1)
+								|
+								|
+								|____panelBox(height:510px; border-color:transparent;)
+											|
+											|
+											|___Query(Result component;saveQueryMode:off; LabelAlignment:top)
+								
