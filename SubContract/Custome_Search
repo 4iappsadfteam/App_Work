@@ -1,4 +1,10 @@
+  
+Search ViewCriteria:
+
+  From Date: On or After
+  To Date  : On or Before
    
+____________________________________________________________   
    public void searchFindACL(ActionEvent actionEvent) {
         if(it2.getValue()!=null){
         ViewObject conHdrVO = ADFUtils.findIterator("Iterator").getViewObject();
