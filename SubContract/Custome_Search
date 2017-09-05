@@ -1,4 +1,8 @@
   
+--EDIT--  
+Page:  #{pageFlowScope.contID}
+AM  :   adf.context.pageFlowScope.Lid
+------------------------------------------------------------------------------------------------------
 Search ViewCriteria:
 
   From Date: On or After
