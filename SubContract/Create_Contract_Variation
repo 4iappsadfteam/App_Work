@@ -1,0 +1,84 @@
+
+
+
+    public String onClickVariation() throws SQLException {
+        String flag="E";
+        String errorMessage=null;
+         String pageRedirect=null;
+        if(conHdrVO.getEstimatedRowCount()!=0){
+            String headerID = (String)conHdrVO.getCurrentRow().getAttribute("ContHeaderId").toString();
+            System.err.println("==headerID=="+headerID);
+            String version = (String)conHdrVO.getCurrentRow().getAttribute("Version").toString();
+            System.err.println("==version=="+version);
+            flag= onCallVaration(headerID, version);
+          if(flag.equals("S")){
+              System.err.println("Package Created");  
+//              ADFContext.getCurrent().getSessionScope().get("idd");
+//              ADFContext.getCurrent().getSessionScope().get("versionn");
+              
+              ADFContext.getCurrent().getSessionScope().put("id", ADFContext.getCurrent().getSessionScope().get("idd"));
+              ADFContext.getCurrent().getSessionScope().put("version",ADFContext.getCurrent().getSessionScope().get("versionn"));
+              
+              conHdrVO.executeQuery();
+              pageRedirect="edit"; 
+          }else{
+            System.err.println("Error: Please check the variation Package");
+            JSFUtils.addFacesErrorMessage("Variation not Created. Please select valid Contract Number");
+              pageRedirect="";
+            }
+          }
+        return pageRedirect;
+     }
+    
+    private Object[][] dobProcArgs = null;
+    
+    public String onCallVaration(Object headId, Object version) throws SQLException{
+           
+           oracle.jbo.domain.Number headerID=new oracle.jbo.domain.Number(headId.toString());
+           System.err.println("=---headID----"+headerID);
+           oracle.jbo.domain.Number versionID=new oracle.jbo.domain.Number(version.toString());
+           System.err.println("=---versionID----"+versionID);
+           String flag = "E"; // Error
+           String errorMessage = null;
+           Object updatedHeader=null;
+           Object updatedVersion=null;
+           //        oracle.jbo.domain.Number newHeadId=new oracle.jbo.domain.Number(0);
+           
+           ApplicationModuleImpl am=(ApplicationModuleImpl)ADFUtils.getApplicationModuleForDataControl(null); 
+           dobProcArgs = new Object[][]{ { "IN", headerID, OracleTypes.NUMBER }, //0
+                                         { "IN", versionID, OracleTypes.NUMBER },//1
+                                         { "OUT", updatedHeader, OracleTypes.NUMBER},   //2
+                                         { "OUT", updatedVersion, OracleTypes.NUMBER} ,  //3
+                                         { "OUT", flag, OracleTypes.VARCHAR }, //4
+                                         { "OUT", errorMessage, OracleTypes.VARCHAR }};  //5
+
+           try {
+               DBUtils.callDBStoredProcedure(am.getDBTransaction(),
+                                         "call xxsc_contract_pkg.create_variations(?,?,?,?,?,?)",
+                                         dobProcArgs);
+               
+               } catch (SQLException e) {
+           }
+           
+           updatedHeader=dobProcArgs[2][1];
+           updatedVersion=dobProcArgs[3][1];
+           flag=(String)dobProcArgs[4][1];
+           errorMessage=(String)dobProcArgs[5][1];
+           
+           System.err.println("==Duplicate Created===="+errorMessage);
+           System.err.println("==Duplicate Created===="+updatedHeader);
+           System.err.println("==Duplicate Created===="+updatedVersion);
+           System.err.println("==Duplicate Created===="+flag);
+           
+           ADFContext.getCurrent().getSessionScope().put("idd", updatedHeader);
+           ADFContext.getCurrent().getSessionScope().put("versionn", updatedVersion);
+//           JSFUtils.addFacesInformationMessage("Flag"+updatedHeader);
+//           JSFUtils.addFacesInformationMessage("Flag"+updatedVersion);
+//           JSFUtils.addFacesInformationMessage("Flag"+flag);
+//           JSFUtils.addFacesInformationMessage("Flag"+errorMessage);
+             
+            //JSFUtils.addFacesInformationMessage("Copy Purchase Order Completed.");
+    
+           return flag;
+       }
+    
