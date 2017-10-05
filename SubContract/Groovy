@@ -1,0 +1,6 @@
+
+
+#{sessionScope.page eq 'buy' ?'Buy Contract':
+sessionScope.page eq 'sell'?'Sell Contract':
+sessionScope.page eq 'variation'?'Variation':
+sessionScope.page eq 'certification'?'Certification':'Application'}
