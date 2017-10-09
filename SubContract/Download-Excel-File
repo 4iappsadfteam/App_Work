@@ -1,0 +1,23 @@
+
+____ExportCollectionActionListener__________
+
+<af:commandButton text="Export To excel" id="cb1">
+            <af:setPropertyListener from="true"
+                                    to="#{pageFlowScope.hideSomeColumns}"
+                                    type="action"/>
+            <af:exportCollectionActionListener exportedId="t1" type="excelHTML"
+                                               title="Employee"
+                                               filename="EmployeeData.xls"/>
+            <af:setPropertyListener from="false"
+                                    to="#{pageFlowScope.hideSomeColumns}"
+                                    type="action"/>
+</af:commandButton>
+          
+_______Hide particular column_______          
+<af:column sortProperty="#{bindings.Employees1.hints.LastName.name}"
+                       sortable="false"
+                       headerText="#{bindings.Employees1.hints.LastName.label}"
+                       id="c7"
+                       visible="#{pageFlowScope.hideSomeColumns ne true}">
+_____________________________________________________________________________________________________________________________
+                       
