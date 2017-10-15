@@ -1,0 +1,33 @@
+
+
+    ExcelDataUpload upload= new ExcelDataUpload();
+    public void onChangeUpload(ValueChangeEvent valueChangeEvent) throws IOException,
+                                                                         InvalidFormatException,
+                                                                         ParseException {
+        valueChangeEvent.getComponent().processUpdates(FacesContext.getCurrentInstance());
+        deleteOldContractLine();
+        UploadedFile file = (UploadedFile)valueChangeEvent.getNewValue();
+        Object prHID=contractVO.getCurrentRow().getAttribute("ReqHeaderId")==null?0:contractVO.getCurrentRow().getAttribute("ReqHeaderId").toString();
+        Object prLineNumber=contractVO.getCurrentRow().getAttribute("ReqNumber")==null?0:contractVO.getCurrentRow().getAttribute("ReqNumber").toString();             
+        Object projectHID=contractVO.getCurrentRow().getAttribute("ProjectId")==null?0:contractVO.getCurrentRow().getAttribute("ProjectId").toString();
+        
+        
+        if (file.getContentType().equalsIgnoreCase("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") ||
+                                file.getContentType().equalsIgnoreCase("application/xlsx") ||
+                                file.getContentType().equalsIgnoreCase("application/kset")) {
+                                System.err.println("Inside XLSX loop");
+            System.err.println("--PR ID--"+prHID+"---Project ID---"+projectHID);
+            upload.readExcelSheet(file.getInputStream(), contractLineTable, projectHID, prHID, prLineNumber);
+            if1.setValue(null);
+        }else if (file.getContentType().equalsIgnoreCase("application/vnd.ms-excel")) {
+                if (file.getFilename().toUpperCase().endsWith(".XLS")) {
+                    System.err.println("==Calling MS-Excel==");
+                  upload.readExcelSheet(file.getInputStream(), contractLineTable, projectHID, prHID, prLineNumber);
+                    if1.setValue(null);
+                } 
+        }else{
+             System.out.println("Inside else loop");
+             JSFUtils.addFacesErrorMessage("File format not supported.-- Upload XLS or XLSX file");
+             }
+       
+       }
