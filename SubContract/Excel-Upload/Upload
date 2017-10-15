@@ -1,4 +1,11 @@
 
+<af:inputFile label="Import To Excel" id="if1" autoSubmit="true"
+                                  valueChangeListener="#{backingBeanScope.ContractBean.onChangeUpload}"
+                                  contentStyle="width:200px"
+                                  binding="#{backingBeanScope.ContractBean.if1}"/>
+                                  
+---------------------------------------------------------------------------------------------------------------
+
 
     ExcelDataUpload upload= new ExcelDataUpload();
     public void onChangeUpload(ValueChangeEvent valueChangeEvent) throws IOException,
