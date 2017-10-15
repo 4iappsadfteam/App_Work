@@ -1,0 +1,35 @@
+
+
+
+
+
+
+
+public void fileDownload(FacesContext facesContext,
+                             OutputStream outputStream) throws FileNotFoundException,
+                                                               IOException {
+        String cname=contractVO.getCurrentRow().getAttribute("ContractName")==null?"LineDetail":contractVO.getCurrentRow().getAttribute("ContractName").toString();
+        File filed =new File(de.downlaodExcel(cname)+"/"+cname+".xls");
+        FileInputStream fis=null;
+        byte[] b;
+        try {
+                  fis = new FileInputStream(filed);
+
+                  int n;
+                  while ((n = fis.available()) > 0) {
+                      b = new byte[n];
+                      int result = fis.read(b);
+                      outputStream.write(b, 0, b.length);
+                      if (result == -1)
+                          break;
+                  }
+              } catch (IOException e) {
+                  e.printStackTrace();
+              }
+        outputStream.flush();
+        outputStream.close();
+        fis.close();
+        filed.delete();
+        
+        
+    }
