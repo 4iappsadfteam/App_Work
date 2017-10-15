@@ -1,6 +1,16 @@
 
 
 
+<af:commandButton text="Export To Excel" id="cb1"
+                                      icon="/images/xl.png">
+                      <af:fileDownloadActionListener method="#{backingBeanScope.ContractBean.fileDownload}"
+                                                     contentType="application/xls"
+                                                     filename="Test.xls"/>
+                    </af:commandButton>
+                    <af:spacer width="10" height="10" id="s13"/>
+---------------------------------------------------------------------------------------------------------------- 
+
+
 
 
 
