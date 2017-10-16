@@ -1,0 +1,15 @@
+
+
+
+ <Variable
+    Name="BV_INTENT"
+    Kind="where"
+    Type="java.lang.String">
+    <Properties>
+      <SchemaBasedProperties>
+        <DISPLAYHINT
+          Value="Hide"/>
+      </SchemaBasedProperties>
+    </Properties>
+    <TransientExpression><![CDATA[adf.context.sessionScope.intent]]></TransientExpression>
+  </Variable>
