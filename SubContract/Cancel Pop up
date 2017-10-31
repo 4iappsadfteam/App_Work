@@ -1,0 +1,24 @@
+
+
+<af:popup id="p1"
+                            binding="#{backingBeanScope.ContractBean.contractInfoCancelPopup}">
+                    <af:dialog id="d1"
+                               inlineStyle="width:350.0px; height:108px;"
+                               title="Warning"
+                               titleIconSource="/image/warning.png" type="none">
+                      <af:outputText value="Are you sure want to Cancel this Information ?" id="ot4"
+                                     inlineStyle="font-weight:bold;"/>
+                      <f:facet name="buttonBar">
+                        <af:toolbar id="t2">
+                          <af:spacer width="210" height="10" id="s3"/>
+                          <af:commandButton text="Ok" id="cb3"
+                                            actionListener="#{bindings.Rollback.execute}"
+                                            immediate="true"
+                                            action="contractInfoCancel"/>
+                          <af:spacer width="10" height="10" id="s18"/>
+                          <af:commandButton text="Cancel" id="cb4"
+                                            actionListener="#{backingBeanScope.ContractBean.onClickContractInfoPopupCancel}"/>
+                        </af:toolbar>
+                      </f:facet>
+                    </af:dialog>
+                  </af:popup>
