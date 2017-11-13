@@ -1,0 +1,74 @@
+    public void currPerVCL(ValueChangeEvent currPerVCL) {
+        double contLneRate=rate.getValue()==null?0:Double.parseDouble(rate.getValue().toString());
+        double contLneAmt=amt.getValue()==null?0:Double.parseDouble(amt.getValue().toString());
+        double currentPercen=currPerVCL.getNewValue()==null?0:Double.parseDouble(currPerVCL.getNewValue().toString());
+        //set Current Amount
+        double currentAmount=(currentPercen*contLneAmt)/100;
+        currAmt.setValue(new BigDecimal(currentAmount));
+        AdfFacesContext.getCurrentInstance().addPartialTarget(currAmt);
+        //set Current Qty
+        double currentQty=currentAmount/contLneRate;
+        currQty.setValue(new BigDecimal(currentQty));
+        AdfFacesContext.getCurrentInstance().addPartialTarget(currQty);
+        //set Cumulative
+        double previousPer=prePercen.getValue()==null?0:Double.parseDouble(prePercen.getValue().toString());
+        double previousQty=preQty.getValue()==null?0:Double.parseDouble(preQty.getValue().toString());
+        double previousAmt=preAmt.getValue()==null?0:Double.parseDouble(preAmt.getValue().toString());
+        cumuPer.setValue(new BigDecimal(previousPer+currentPercen));
+        AdfFacesContext.getCurrentInstance().addPartialTarget(cumuPer);
+        cumuQty.setValue(new BigDecimal(previousQty+currentQty));
+        AdfFacesContext.getCurrentInstance().addPartialTarget(cumuQty);
+        cumuAmt.setValue(new BigDecimal(previousAmt+currentAmount));
+        AdfFacesContext.getCurrentInstance().addPartialTarget(cumuAmt);   
+    }
+
+    public void currQtyVCL(ValueChangeEvent currQtyVCL) {
+        double contLneRate=rate.getValue()==null?0:Double.parseDouble(rate.getValue().toString());
+        double contLneAmt=amt.getValue()==null?0:Double.parseDouble(amt.getValue().toString());
+        double currentQty=currQtyVCL.getNewValue()==null?0:Double.parseDouble(currQtyVCL.getNewValue().toString());
+        // set currenty Amount
+        double currentAmt=currentQty*contLneRate;
+        currAmt.setValue(new BigDecimal(currentAmt));
+        AdfFacesContext.getCurrentInstance().addPartialTarget(currAmt);
+        // set current Percentage
+        double currentPer=(100*currentAmt/contLneAmt);
+        currPer.setValue(new BigDecimal(currentPer));
+        AdfFacesContext.getCurrentInstance().addPartialTarget(currPer);
+        //set cumulative value/
+        double previousPer=prePercen.getValue()==null?0:Double.parseDouble(prePercen.getValue().toString());
+        double previousQty=preQty.getValue()==null?0:Double.parseDouble(preQty.getValue().toString());
+        double previousAmt=preAmt.getValue()==null?0:Double.parseDouble(preAmt.getValue().toString());
+        cumuPer.setValue(new BigDecimal(previousPer+currentPer));
+        AdfFacesContext.getCurrentInstance().addPartialTarget(cumuPer);
+        cumuQty.setValue(new BigDecimal(previousQty+currentQty));
+        AdfFacesContext.getCurrentInstance().addPartialTarget(cumuQty);
+        cumuAmt.setValue(new BigDecimal(previousAmt+currentAmt));
+        AdfFacesContext.getCurrentInstance().addPartialTarget(cumuAmt);
+        
+    }
+
+    public void currAmtVCL(ValueChangeEvent currAmtVCL) {
+        double contLneRate=rate.getValue()==null?0:Double.parseDouble(rate.getValue().toString());
+        double contLneAmt=amt.getValue()==null?0:Double.parseDouble(amt.getValue().toString());
+        double currentAmt=currAmtVCL.getNewValue()==null?0:Double.parseDouble(currAmtVCL.getNewValue().toString());
+        
+        //set Current Qty
+        double currentQty=currentAmt/contLneRate;
+        currQty.setValue(new BigDecimal(currentQty));
+        AdfFacesContext.getCurrentInstance().addPartialTarget(currQty);
+        //set Current Percentage
+        double currentPercentage=(100*currentAmt/contLneAmt);
+        System.err.println(currentPercentage);
+        currPer.setValue(new BigDecimal(currentPercentage));
+        AdfFacesContext.getCurrentInstance().addPartialTarget(currPer);
+        
+        double previousPer=prePercen.getValue()==null?0:Double.parseDouble(prePercen.getValue().toString());
+        double previousQty=preQty.getValue()==null?0:Double.parseDouble(preQty.getValue().toString());
+        double previousAmt=preAmt.getValue()==null?0:Double.parseDouble(preAmt.getValue().toString());
+        cumuPer.setValue(new BigDecimal(previousPer+currentPercentage));
+        AdfFacesContext.getCurrentInstance().addPartialTarget(cumuPer);
+        cumuQty.setValue(new BigDecimal(previousQty+currentQty));
+        AdfFacesContext.getCurrentInstance().addPartialTarget(cumuQty);
+        cumuAmt.setValue(new BigDecimal(previousAmt+currentAmt));
+        AdfFacesContext.getCurrentInstance().addPartialTarget(cumuAmt);
+    }
