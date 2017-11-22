@@ -1,0 +1,348 @@
+package subcontract.view.backing.WEBINF.oracle.apps.uikit.Fragments;
+
+
+import Utils.ADFUtils;
+import Utils.JSFUtils;
+
+import java.io.StringReader;
+
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.sql.Types;
+
+import javax.faces.event.ActionEvent;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+
+import javax.sql.DataSource;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import oracle.adf.view.rich.component.rich.RichMenu;
+import oracle.adf.view.rich.component.rich.data.RichTable;
+import oracle.adf.view.rich.component.rich.input.RichInputText;
+import oracle.adf.view.rich.component.rich.layout.RichPanelBox;
+import oracle.adf.view.rich.component.rich.layout.RichPanelFormLayout;
+import oracle.adf.view.rich.component.rich.layout.RichPanelGroupLayout;
+import oracle.adf.view.rich.component.rich.layout.RichPanelLabelAndMessage;
+import oracle.adf.view.rich.component.rich.layout.RichToolbar;
+import oracle.adf.view.rich.component.rich.nav.RichCommandButton;
+import oracle.adf.view.rich.component.rich.nav.RichGoMenuItem;
+import oracle.adf.view.rich.component.rich.output.RichOutputText;
+import oracle.adf.view.rich.component.rich.output.RichPanelCollection;
+import oracle.adf.view.rich.component.rich.output.RichSpacer;
+
+import oracle.jbo.ViewObject;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import org.xml.sax.InputSource;
+
+import ws.PublicReportService;
+import ws.PublicReportServiceService;
+
+import ws.types.ArrayOfParamNameValue;
+import ws.types.ArrayOfString;
+import ws.types.ParamNameValue;
+import ws.types.ReportRequest;
+import ws.types.ReportResponse;
+import ws.types.ScheduleRequest;
+
+public class SellConUploadLines {
+    private RichPanelBox pb1;
+    private RichPanelBox pb2;
+    private RichSpacer s1;
+    private RichInputText it1;
+    private RichCommandButton cb1;
+    private RichPanelFormLayout pfl1;
+    private RichPanelLabelAndMessage plam1;
+    private RichOutputText ot1;
+    private RichPanelLabelAndMessage plam2;
+    private RichOutputText ot2;
+    private RichPanelLabelAndMessage plam3;
+    private RichOutputText ot3;
+    private RichPanelLabelAndMessage plam4;
+    private RichOutputText ot4;
+    private RichPanelLabelAndMessage plam5;
+    private RichOutputText ot5;
+    private RichPanelLabelAndMessage plam6;
+    private RichOutputText ot6;
+    private RichPanelLabelAndMessage plam7;
+    private RichOutputText ot7;
+    private RichPanelLabelAndMessage plam8;
+    private RichOutputText ot8;
+    private RichPanelLabelAndMessage plam9;
+    private RichOutputText ot9;
+    private RichPanelLabelAndMessage plam10;
+    private RichOutputText ot10;
+    private RichPanelLabelAndMessage plam11;
+    private RichOutputText ot11;
+    private RichPanelLabelAndMessage plam12;
+    private RichOutputText ot12;
+    private RichPanelLabelAndMessage plam13;
+    private RichOutputText ot13;
+    private RichPanelLabelAndMessage plam14;
+    private RichOutputText ot14;
+    private RichPanelLabelAndMessage plam15;
+    private RichOutputText ot15;
+    private RichPanelLabelAndMessage plam16;
+    private RichOutputText ot16;
+    private RichPanelLabelAndMessage plam17;
+    private RichOutputText ot17;
+    private RichPanelLabelAndMessage plam18;
+    private RichOutputText ot18;
+    private RichPanelCollection pc1;
+    private RichTable t1;
+    private RichToolbar t2;
+    private RichCommandButton cb2;
+    private RichMenu m1;
+    private RichGoMenuItem gmi1;
+    private RichPanelBox pb3;
+    private RichPanelGroupLayout pgl2;
+    private RichSpacer s2;
+    private RichSpacer s3;
+
+
+********************************************
+
+    public void onClickPopulate(ActionEvent actionEvent) {
+        if (conNum != null) {
+            String retVal1 = synConHeader(conNum);
+            if (retVal1.equalsIgnoreCase("Y")) {
+                ViewObject headerVO =
+                    ADFUtils.findIterator("XxstgSellContractHeaders_VO1Iterator").getViewObject();
+                headerVO.executeQuery();
+                //XxstgSellContractHeaders_VO1Iterator
+                String retVal2 = synConLines(conNum);
+                if (retVal2.equalsIgnoreCase("Y")) {
+                    ViewObject lineVO =
+                        ADFUtils.findIterator("XxstgSellContractLines_VO1Iterator").getViewObject();
+                    lineVO.executeQuery();
+                }
+            } else {
+
+            }
+
+        } else {
+            JSFUtils.addFacesInformationMessage("Please enter the Contract Number to Fetch");
+        }
+    }
+
+    public String synConHeader(String conNum) {
+        String str, retStr = null;
+        Context ctx;
+        Connection con = null;
+        CallableStatement stmt = null;
+        Statement stmt2 = null;
+        ResultSet rs = null;
+        ScheduleRequest sreq = new ScheduleRequest();
+        PublicReportServiceService publicReportServiceService =
+            new PublicReportServiceService();
+        PublicReportService publicReportService =
+            publicReportServiceService.getPublicReportService();
+        ReportRequest reportRequest = new ReportRequest();
+        reportRequest.setAttributeFormat("xml");
+        reportRequest.setAttributeLocale("en-US");
+        reportRequest.setAttributeTemplate("Simple");
+        reportRequest.setByPassCache(true);
+        reportRequest.setSizeOfDataChunkDownload(-1);
+        reportRequest.setReportAbsolutePath("/Custom/Sub Contract/SC Stg Sell Contract Headers.xdo");
+        ArrayOfParamNameValue pNameValue = new ArrayOfParamNameValue();
+        ParamNameValue nameValue1 = new ParamNameValue();
+        nameValue1.setName("p_contract_number");
+        ArrayOfString aos1 = new ArrayOfString();
+        aos1.getItem().add(conNum);
+        nameValue1.setValues(aos1);
+        pNameValue.getItem().add(nameValue1);
+        reportRequest.setParameterNameValues(pNameValue);
+        sreq.setReportRequest(reportRequest);
+        sreq.setSaveDataOption(true);
+        sreq.setScheduleBurstringOption(false);
+        sreq.setSchedulePublicOption(true);
+        sreq.setUserJobName("TEST");
+        ReportResponse response = new ReportResponse();
+        try {
+            response =
+                    publicReportService.runReport(reportRequest, userName, passWord);
+            str = response.getReportBytesAsString();
+            System.err.println("=====OUT======HEADER=====" + str);
+            DocumentBuilder db;
+            db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            InputSource is = new InputSource();
+            is.setCharacterStream(new StringReader(str));
+            Document doc = db.parse(is);
+            NodeList nodes = doc.getElementsByTagName("G_1");
+            if (nodes.getLength() != 0) {
+                Node nNode = nodes.item(0);
+
+                if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+                    Element element = (Element)nNode;
+                    String poStatus =
+                        (element.getElementsByTagName("CONTRACT_STATUS").item(0).getTextContent() !=
+                         null ?
+                         element.getElementsByTagName("CONTRACT_STATUS").item(0).getTextContent().toString() :
+                         null);
+
+                    if ((("DRAFT".equalsIgnoreCase(poStatus)) ||
+                         ("UNDER_AMENDMENT".equalsIgnoreCase(poStatus)))) {
+                        try {
+                            ctx = new InitialContext();
+                            DataSource ds = (DataSource)ctx.lookup(dataSource);
+                            con = ds.getConnection();
+                            stmt =
+                        con.prepareCall("{call xxems_po_cust_std_sync.update_po_headers(?,?,?)}");
+                            stmt.setString(1, str);
+                            stmt.registerOutParameter(3, Types.VARCHAR);
+                            stmt.executeUpdate();
+                            retStr = stmt.getString(3);
+                            System.err.println("===CON HEADER RES====" +
+                                               retStr);
+                            JSFUtils.addFacesInformationMessage("Contract Header Synchronized.");
+                            retStr = "Y";
+                        } catch (Exception e) {
+                            System.err.println("SQL Exception in Header--> " +
+                                               e.toString());
+                            retStr = "N";
+                        }
+                    } else {
+                        retStr = poStatus;
+                    }
+                }
+            } else {
+                retStr = "Contract Number is not Valid.Please try again.";
+            }
+        } catch (Exception e) {
+            System.err.println("Exception Report call " + e);
+            retStr = "Issues with connection.Please check it.";
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+
+                }
+                if (stmt2 != null) {
+                    stmt2.close();
+
+                }
+                if (stmt != null) {
+                    stmt.close();
+
+                }
+                if (con != null) {
+                    con.close();
+
+                }
+            } catch (Exception e) {
+                System.err.println("Exception in Finally block " + e);
+                retStr = "Issues with connections.Please check.";
+            }
+        }
+        return retStr;
+    }
+
+    public String synConLines(String conNum) {
+        String str, retStr = null;
+        Context ctx;
+        Connection con = null;
+        CallableStatement stmt = null;
+        Statement stmt2 = null;
+        ResultSet rs = null;
+        ScheduleRequest sreq = new ScheduleRequest();
+        PublicReportServiceService publicReportServiceService =
+            new PublicReportServiceService();
+        PublicReportService publicReportService =
+            publicReportServiceService.getPublicReportService();
+        ReportRequest reportRequest = new ReportRequest();
+        reportRequest.setAttributeFormat("xml");
+        reportRequest.setAttributeLocale("en-US");
+        reportRequest.setAttributeTemplate("Simple");
+        reportRequest.setByPassCache(true);
+        reportRequest.setSizeOfDataChunkDownload(-1);
+        reportRequest.setReportAbsolutePath("/Custom/Sub Contract/SC Stg Sell Contract Lines.xdo");
+        ArrayOfParamNameValue pNameValue = new ArrayOfParamNameValue();
+        ParamNameValue nameValue1 = new ParamNameValue();
+        nameValue1.setName("p_contract_number");
+        ArrayOfString aos1 = new ArrayOfString();
+        aos1.getItem().add(conNum);
+        nameValue1.setValues(aos1);
+        pNameValue.getItem().add(nameValue1);
+        reportRequest.setParameterNameValues(pNameValue);
+        sreq.setReportRequest(reportRequest);
+        sreq.setSaveDataOption(true);
+        sreq.setScheduleBurstringOption(false);
+        sreq.setSchedulePublicOption(true);
+        sreq.setUserJobName("TEST");    
+        ReportResponse response = new ReportResponse();
+        try {
+            response =
+                    publicReportService.runReport(reportRequest, userName, passWord);
+            str = response.getReportBytesAsString();
+            System.err.println("=====OUT======LLINES=====" + str);
+            DocumentBuilder db;
+            db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            InputSource is = new InputSource();
+            is.setCharacterStream(new StringReader(str));
+            Document doc = db.parse(is);
+            NodeList nodes = doc.getElementsByTagName("G_1");
+            if (nodes.getLength() != 0) {
+                Node nNode = nodes.item(0);
+                if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+                   try {
+                        ctx = new InitialContext();
+                        DataSource ds = (DataSource)ctx.lookup(dataSource);
+                        con = ds.getConnection();
+                        stmt =
+con.prepareCall("{call xxems_po_cust_std_sync.update_po_headers(?,?,?)}");
+                        stmt.setString(1, str);
+                        stmt.registerOutParameter(3, Types.VARCHAR);
+                        stmt.executeUpdate();
+                        retStr = stmt.getString(3);
+                        System.err.println("===CON HEADER RES====" + retStr);
+                        JSFUtils.addFacesInformationMessage("Contract Lines Synchronized.");
+                    } catch (Exception e) {
+                        System.err.println("SQL Exception in Header--> " +
+                                           e.toString());
+                        retStr = "N";
+                    }
+
+                }
+            } 
+        } catch (Exception e) {
+            System.err.println("Exception Report call " + e);
+           // retStr = "Issues with connection.Please check it.";
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+
+                }
+                if (stmt2 != null) {
+                    stmt2.close();
+
+                }
+                if (stmt != null) {
+                    stmt.close();
+
+                }
+                if (con != null) {
+                    con.close();
+
+                }
+            } catch (Exception e) {
+                System.err.println("Exception in Finally block " + e);
+               // retStr = "Issues with connections.Please check.";
+            }
+        }
+        return retStr;
+    }
+    
+   **************************************************************** 
+
+
