@@ -112,6 +112,16 @@ public class SellConUploadLines {
 
 ********************************************
 
+ String conNum = "";
+     String userName = "snagarajan@emsmobile.com";
+    String passWord = "Dubai123";
+    String dataSource = "apex";
+    private String poNumber;
+
+
+
+ 
+
     public void onClickPopulate(ActionEvent actionEvent) {
         if (conNum != null) {
             String retVal1 = synConHeader(conNum);
