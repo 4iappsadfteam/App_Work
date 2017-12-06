@@ -15,4 +15,10 @@ font-size:large; font-weight:bold;color:#1367ae;
 ---CERTIFICATION---
 #{(sessionScope.addEditCert eq 'add'||sessionScope.addEditCert eq 'edit')?(sessionScope.page eq 'certificationSell'?'Customer Certification':'Payment Certification'):'Payment Certification'}
 
-==============================================
+===============================================================================
+--APPLICATION----
+#{sessionScope.page eq 'application'?'Payment Application Number':'Payment Application Number'}
+font-size:large; font-weight:bold;
+#{bindings.ApplicationNumber.inputValue}
+font-size:large; font-weight:bold;color:#1367ae;
+===============================================================================
