@@ -1,6 +1,12 @@
-
-
 #{sessionScope.page eq 'buy' ?'Buy Contract':
 sessionScope.page eq 'sell'?'Sell Contract':
 sessionScope.page eq 'variation'?'Variation':
 sessionScope.page eq 'certification'?'Certification':'Application'}
+
+
+============================================================================
+
+#{sessionScope.page eq 'buy' ? (bindings.Version.inputValue > 0?'Variation Number':'Buy Contract  Number'):(sessionScope.page eq 'variation'?'Variation  Number':'Sell Contract  Number')}
+font-size:large; font-weight:bold;
+#{bindings.ContractNum.inputValue}
+font-size:large; font-weight:bold;color:#1367ae;
