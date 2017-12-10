@@ -22,3 +22,8 @@ font-size:large; font-weight:bold;
 #{bindings.ApplicationNumber.inputValue}
 font-size:large; font-weight:bold;color:#1367ae;
 ===============================================================================
+Certificatin
+#{(sessionScope.addEditCert eq 'add'|| sessionScope.addEditCert eq 'edit')?(sessionScope.page eq 'certificationSell'?'Customer Certification':'Payment Certification'):'Payment Certification'}
+
+Appplication
+#{sessionScope.page eq 'application'?'Payment Application':'Payment Application'}
