@@ -1,0 +1,25 @@
+
+    public void refreshApplication(){
+    System.err.println("==APP==PAGE 0=="+ADFContext.getCurrent().getSessionScope().get("page"));
+          if ("add".equalsIgnoreCase((String)ADFContext.getCurrent().getSessionScope().get("addEditApp"))) {
+                if ("applicationBuy".equalsIgnoreCase((String)ADFContext.getCurrent().getSessionScope().get("page")) ||
+                    "application".equalsIgnoreCase((String)ADFContext.getCurrent().getSessionScope().get("page"))) {
+                    System.err.println("==Apps==PAGE ADD BUTTON==" + ADFContext.getCurrent().getSessionScope().get("page"));
+                    ADFContext.getCurrent().getPageFlowScope().put("resultVal", "NewButtonApplication");
+                } else {
+                    System.err.println("==Apps==PAGE ADD METHOD==" + ADFContext.getCurrent().getSessionScope().get("page"));
+                    ADFContext.getCurrent().getPageFlowScope().put("resultVal", "NewMethodApplication");
+                }
+        } else if ("edit".equalsIgnoreCase((String)ADFContext.getCurrent().getSessionScope().get("addEditCert"))) {
+            System.err.println("===Application Edit===");
+            ADFContext.getCurrent().getPageFlowScope().put("resultVal", "EditApplication");
+        }
+==================================================================================================================
+Router
+buttonAdd
+buttonMethod
+editApp
+
+#{pageFlowScope.resultVal=='NewButtonApplication'}
+#{pageFlowScope.resultVal=='NewMethodApplication'}
+#{pageFlowScope.resultVal=='EditApplication'}
