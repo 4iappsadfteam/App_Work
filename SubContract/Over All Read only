@@ -1,0 +1,12 @@
+Over All Screen Read only
+
+    public boolean isAttributeUpdateable(int i){
+        Map session= ADFContext.getCurrent().getSessionScope();
+        Object currentPageControl=session.get("grantMap");
+        Object currentPage=session.get("currentPage");
+        if(getApprovalStatus().equalsIgnoreCase("IN-PRO")||getApprovalStatus().equalsIgnoreCase("APR")){
+            return false;
+        }else{
+            return super.isAttributeUpdateable(i);
+        }
+    }
