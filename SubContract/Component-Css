@@ -1,2 +1,5 @@
 panel Box Border Colour
 background-color:#b4d3ed;
+
+Active or Rejected
+inlineStyle="background-color:#{row.DepartmentId eq '30' ? 'green' : 'red'}">
