@@ -1,0 +1,3 @@
+
+RichPopup.PopupHints hints = new RichPopup.PopupHints();
+this.getPopUp().show(hints);
