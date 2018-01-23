@@ -1,3 +1,7 @@
+
+___________________________________________________
+Input Text: Total Amount
+font-weight:bolder; font-size:small; color:#1367AE;text-align:right;
 ___________________________________________________
 Eg: 5 % 500.00
 Inuput Content: width:50px;text-align:right;
