@@ -1,3 +1,7 @@
+
+Created By, Updated By
+adf.context.current.sessionScope.get('userName')
+********************************************************************************
 #{sessionScope.page eq 'buy' ?'Buy Contract':
 sessionScope.page eq 'sell'?'Sell Contract':
 sessionScope.page eq 'variation'?'Variation':
