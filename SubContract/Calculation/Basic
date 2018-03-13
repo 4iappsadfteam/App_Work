@@ -1,0 +1,3 @@
+double cummulativeAmt =(cummulativePer * contractLneAmt) / 100;
+double cummulativeQty = cummulativeAmt / contractLneRate;
+double cummulativePer =(100 * cummulativeAmt / contractLneAmt);
