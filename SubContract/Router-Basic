@@ -1,4 +1,15 @@
 
+---------------------------------------------------------------------------------------
+    public void refreshApplication(){
+        if(ADFContext.getCurrent().getSessionScope().get("addEditRequest").toString().equalsIgnoreCase("Add")){
+            ADFContext.getCurrent().getPageFlowScope().put("resultVal", "NewRequest");
+        }else if(ADFContext.getCurrent().getSessionScope().get("addEditRequest").toString().equalsIgnoreCase("Edit")){
+            ADFContext.getCurrent().getPageFlowScope().put("resultVal", "EditRequest");
+        }
+    }
+
+---------------------------------------------------------------------------------------------
+
     public void refreshApplication(){
     System.err.println("==APP==PAGE 0=="+ADFContext.getCurrent().getSessionScope().get("page"));
           if ("add".equalsIgnoreCase((String)ADFContext.getCurrent().getSessionScope().get("addEditApp"))) {
