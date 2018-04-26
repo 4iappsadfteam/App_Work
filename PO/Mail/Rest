@@ -1,0 +1,1 @@
+URL url = new URL("https://apex-a418962.db.em2.oraclecloudapps.com/apex/bfm/bfmmail/");
