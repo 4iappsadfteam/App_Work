@@ -1,0 +1,1 @@
+(new oracle.jbo.server.SequenceImpl("XXSC_CERT_HEADER_ID_S",adf.object.getDBTransaction())).getSequenceNumber()
