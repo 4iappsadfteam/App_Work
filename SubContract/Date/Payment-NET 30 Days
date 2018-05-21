@@ -1,0 +1,20 @@
+** From Text get the number and adding the date** 
+ 
+public Date getMaxDateVal() {
+String certificatepayterm= applicationHrdVO.getCurrentRow().getAttribute("ContactPayTerm").toString();
+String num=certificatepayterm.replaceAll("[^0-9]", "");
+int number=Integer.parseInt(num);
+System.err.println("number : "+ number);
+String n=Integer.toString(number);
+JSFUtils.addFacesInformationMessage(n);
+//           -----------------------------
+Date str_date = (Date)applicationHrdVO.getCurrentRow().getAttribute("ApplicationDate"); 
+System.err.println(str_date);
+           
+//            ----------------------------
+Calendar cal = Calendar.getInstance();
+cal.setTime(str_date);
+cal.add(Calendar.DATE, number);
+//MaxDateVal = cal.getTime();
+return cal.getTime();
+        }
