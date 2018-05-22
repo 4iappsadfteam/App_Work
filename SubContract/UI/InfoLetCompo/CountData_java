@@ -1,0 +1,40 @@
+
+
+
+    public void dataCount(){
+        this.getdashBoardDataCountROVO1().executeQuery();
+        
+        String masterCount=this.getdashBoardDataCountROVO1().first().getAttribute("Master")==null?"0":this.getdashBoardDataCountROVO1().first().getAttribute("Master").toString();
+        String offerCount=this.getdashBoardDataCountROVO1().first().getAttribute("OffHeader")==null?"0":this.getdashBoardDataCountROVO1().first().getAttribute("OffHeader").toString();
+        String bookCount=this.getdashBoardDataCountROVO1().first().getAttribute("BookHeader")==null?"0":this.getdashBoardDataCountROVO1().first().getAttribute("BookHeader").toString();
+        String unitCount=this.getdashBoardDataCountROVO1().first().getAttribute("PropUnits")==null?"0":this.getdashBoardDataCountROVO1().first().getAttribute("PropUnits").toString();
+        
+        //total        
+        ADFContext.getCurrent().getSessionScope().put("box1Total", masterCount);
+        ADFContext.getCurrent().getSessionScope().put("box2Total", offerCount);
+        ADFContext.getCurrent().getSessionScope().put("box3Total", bookCount);
+        ADFContext.getCurrent().getSessionScope().put("box4Total", unitCount);
+                
+         // Property       
+        ADFContext.getCurrent().getSessionScope().put("box1Approved", 0);
+        ADFContext.getCurrent().getSessionScope().put("box1Pending", 0);
+        ADFContext.getCurrent().getSessionScope().put("box1Rejected", 0);
+        
+        // Booking
+        ADFContext.getCurrent().getSessionScope().put("box2Approved", 0);
+        ADFContext.getCurrent().getSessionScope().put("box2Pending", 0);
+        ADFContext.getCurrent().getSessionScope().put("box2Rejected", 0);
+        
+        // quotation
+        ADFContext.getCurrent().getSessionScope().put("box3Approved", 0);
+        ADFContext.getCurrent().getSessionScope().put("box3Pending", 0);
+        ADFContext.getCurrent().getSessionScope().put("box3Rejected", 0);
+        // Unit
+        ADFContext.getCurrent().getSessionScope().put("box4Approved", 0);
+        ADFContext.getCurrent().getSessionScope().put("box4Pending", 0);
+        ADFContext.getCurrent().getSessionScope().put("box4Rejected", 0);
+        
+        
+                
+                
+    }
