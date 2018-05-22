@@ -1,0 +1,42 @@
+#{sessionScope.infoLet eq 'b'}
+#{sessionScope.infoLet eq 'b'}
+
+<af:panelGridLayout id="panelGridLayout1"
+                                inlineStyle="background-color:#2C4351;">
+              <af:gridRow id="gr1">
+                <af:gridCell id="gc1" halign="center" valign="stretch"
+                             width="100%">
+                  <af:panelGroupLayout id="panelGroupLayout18"
+                                       layout="horizontal"
+                                       partialTriggers="cil1 cil2"
+                                       inlineStyle="margin-top:20px">
+                    <f:facet name="separator">
+                      <af:spacer width="3" id="spacer5"/>
+                    </f:facet>
+                    <af:commandImageLink id="cil1" partialSubmit="true"
+                                         icon="/images/func_pagination_28_ena.png"
+                                         disabledIcon="/images/func_pagination_28_act.png"
+                                         hoverIcon="/images/func_pagination_28_hov.png"
+                                         depressedIcon="/images/func_pagination_28_act.png"
+                                         styleClass="text-hidden">
+                      <af:setPropertyListener from="a"
+                                              to="#{sessionScope.infoLet}"
+                                              type="action"/>
+                    </af:commandImageLink>
+                    <af:commandImageLink id="cil2" partialSubmit="true"
+                                         icon="/images/func_pagination_28_ena.png"
+                                         disabledIcon="/images/func_pagination_28_act.png"
+                                         hoverIcon="/images/func_pagination_28_hov.png"
+                                         depressedIcon="/images/func_pagination_28_act.png"
+                                         styleClass="text-hidden">
+                      <af:setPropertyListener from="b"
+                                              to="#{sessionScope.infoLet}"
+                                              type="action"/>
+                    </af:commandImageLink>
+                  </af:panelGroupLayout>
+                </af:gridCell>
+              </af:gridRow>
+              <af:gridRow id="gr2">
+                <af:gridCell id="gc2" halign="end"/>
+              </af:gridRow>
+            </af:panelGridLayout>
