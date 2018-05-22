@@ -1,0 +1,364 @@
+
+<af:panelStretchLayout id="psl1" topHeight="0px"
+                             styleClass="AFStretchWidth"
+                             startWidth="0px" endWidth="0px" bottomHeight="0px"
+                             inlineStyle="height:585.0px;">
+        <f:facet name="center">
+          <af:panelGroupLayout id="pgl3"
+                               inlineStyle="height:585.0px;" layout="scroll">
+            <af:panelGroupLayout id="pgl2" layout="horizontal"
+                                 inlineStyle="margin-top:20px;">
+              <acdc:InfoletDC hasBack="YES" hasExpanded="NO" hasFront="YES"
+                              title="Property" id="idc1"
+                              expandedSize="INFOLET3X3" frontSize="INFOLET1X1"
+                              backSize="INFOLET1X2">
+                <f:facet name="front">
+                  <af:panelGroupLayout id="panelGroupLayout1">
+                    <af:outputLabel value="Total Property" id="ol1"
+                                    inlineStyle="margin-top:10px; font-size:small; font-weight:900;margin-left:8px;"
+                                    styleClass="InfoTileTitle"/>
+                    <af:panelGroupLayout id="panelGroupLayout2"
+                                         layout="vertical"
+                                         styleClass="infolet-content infolet-padding"
+                                         halign="center">
+                      <af:spacer width="10" height="10" id="spacer1"/>
+                      <af:outputLabel value="#{sessionScope.box1Total}"
+                                      id="ol2"
+                                      inlineStyle="color:Black; font-weight:600; font-size:medium;font-size:x-large;"/>
+                    </af:panelGroupLayout>
+                  </af:panelGroupLayout>
+                </f:facet>
+                <f:facet name="back">
+                  <af:panelGroupLayout id="pgl5" layout="horizontal">
+                    <af:panelGroupLayout id="panelGroupLayout9">
+                      <af:outputLabel value="Total" id="outputLabel7"
+                                      inlineStyle="margin-top:10px; font-size:small; font-weight:900;margin-left:17px;"
+                                      styleClass="InfoTileTitle"/>
+                      <af:panelGroupLayout id="panelGroupLayout10"
+                                           layout="vertical"
+                                           styleClass="infolet-content infolet-padding"
+                                           halign="center">
+                        <af:spacer width="10" height="10" id="spacer5"/>
+                        <af:outputLabel value="#{sessionScope.box1Total}"
+                                        id="outputLabel8"
+                                        inlineStyle="color:Black; font-weight:600; font-size:medium;font-size:x-large;"/>
+                      </af:panelGroupLayout>
+                    </af:panelGroupLayout>
+                    <af:panelGroupLayout id="panelGroupLayout11">
+                      <af:outputLabel value="Approved" id="outputLabel9"
+                                      inlineStyle="margin-top:10px; font-size:small; font-weight:900;margin-left:17px;"
+                                      styleClass="InfoTileTitle"/>
+                      <af:panelGroupLayout id="panelGroupLayout12"
+                                           layout="vertical"
+                                           styleClass="infolet-content infolet-padding"
+                                           halign="center">
+                        <af:spacer width="10" height="10" id="spacer6"/>
+                        <af:outputLabel value="#{sessionScope.box1Approved}"
+                                        id="outputLabel10"
+                                        inlineStyle="color:Green; font-weight:600; font-size:medium;font-size:x-large;"/>
+                      </af:panelGroupLayout>
+                    </af:panelGroupLayout>
+                    <af:panelGroupLayout id="panelGroupLayout13">
+                      <af:outputLabel value="Pending" id="outputLabel11"
+                                      inlineStyle="margin-top:10px; font-size:small; font-weight:900;margin-left:17px;"
+                                      styleClass="InfoTileTitle"/>
+                      <af:panelGroupLayout id="panelGroupLayout14"
+                                           layout="vertical"
+                                           styleClass="infolet-content infolet-padding"
+                                           halign="center">
+                        <af:spacer width="10" height="10" id="spacer7"/>
+                        <af:outputLabel value="#{sessionScope.box1Pending}"
+                                        id="outputLabel12"
+                                        inlineStyle="color:Olive; font-weight:600; font-size:medium;font-size:x-large;"/>
+                      </af:panelGroupLayout>
+                    </af:panelGroupLayout>
+                    <af:panelGroupLayout id="panelGroupLayout15">
+                      <af:outputLabel value="Rejected" id="outputLabel13"
+                                      inlineStyle="margin-top:10px; font-size:small; font-weight:900;margin-left:17px;"
+                                      styleClass="InfoTileTitle"/>
+                      <af:panelGroupLayout id="panelGroupLayout16"
+                                           layout="vertical"
+                                           styleClass="infolet-content infolet-padding"
+                                           halign="center">
+                        <af:spacer width="10" height="10" id="spacer8"/>
+                        <af:outputLabel value="#{sessionScope.box1Rejected}"
+                                        id="outputLabel14"
+                                        inlineStyle="color:Red; font-weight:600; font-size:medium;font-size:x-large;"/>
+                      </af:panelGroupLayout>
+                    </af:panelGroupLayout>
+                  </af:panelGroupLayout>
+                </f:facet>
+                <f:facet name="expanded"/>
+              </acdc:InfoletDC>
+              <acdc:InfoletDC hasBack="YES" hasExpanded="NO" hasFront="YES"
+                              title="Booking" id="idc2"
+                              expandedSize="INFOLET3X3" frontSize="INFOLET1X1"
+                              backSize="INFOLET1X2">
+                <f:facet name="front">
+                  <af:panelGroupLayout id="panelGroupLayout3">
+                    <af:outputLabel value="Total Booking" id="outputLabel1"
+                                    inlineStyle="margin-top:10px; font-size:small; font-weight:900;margin-left:8px;"
+                                    styleClass="InfoTileTitle"/>
+                    <af:panelGroupLayout id="panelGroupLayout4"
+                                         layout="vertical"
+                                         styleClass="infolet-content infolet-padding"
+                                         halign="center">
+                      <af:spacer width="10" height="10" id="spacer2"/>
+                      <af:outputLabel value="#{sessionScope.box2Total}"
+                                      id="outputLabel2"
+                                      inlineStyle="color:Black; font-weight:600; font-size:medium;font-size:x-large;"/>
+                    </af:panelGroupLayout>
+                  </af:panelGroupLayout>
+                </f:facet>
+                <f:facet name="back">
+                  <af:panelGroupLayout id="panelGroupLayout17"
+                                       layout="horizontal">
+                    <af:panelGroupLayout id="panelGroupLayout18">
+                      <af:outputLabel value="Total" id="outputLabel15"
+                                      inlineStyle="margin-top:10px; font-size:small; font-weight:900;margin-left:17px;"
+                                      styleClass="InfoTileTitle"/>
+                      <af:panelGroupLayout id="panelGroupLayout19"
+                                           layout="vertical"
+                                           styleClass="infolet-content infolet-padding"
+                                           halign="center">
+                        <af:spacer width="10" height="10" id="spacer9"/>
+                        <af:outputLabel value="#{sessionScope.box2Total}"
+                                        id="outputLabel16"
+                                        inlineStyle="color:Black; font-weight:600; font-size:medium;font-size:x-large;"/>
+                      </af:panelGroupLayout>
+                    </af:panelGroupLayout>
+                    <af:panelGroupLayout id="panelGroupLayout20">
+                      <af:outputLabel value="Approved" id="outputLabel17"
+                                      inlineStyle="margin-top:10px; font-size:small; font-weight:900;margin-left:17px;"
+                                      styleClass="InfoTileTitle"/>
+                      <af:panelGroupLayout id="panelGroupLayout21"
+                                           layout="vertical"
+                                           styleClass="infolet-content infolet-padding"
+                                           halign="center">
+                        <af:spacer width="10" height="10" id="spacer10"/>
+                        <af:outputLabel value="#{sessionScope.box2Approved}"
+                                        id="outputLabel18"
+                                        inlineStyle="color:Green; font-weight:600; font-size:medium;font-size:x-large;"/>
+                      </af:panelGroupLayout>
+                    </af:panelGroupLayout>
+                    <af:panelGroupLayout id="panelGroupLayout22">
+                      <af:outputLabel value="Pending" id="outputLabel19"
+                                      inlineStyle="margin-top:10px; font-size:small; font-weight:900;margin-left:17px;"
+                                      styleClass="InfoTileTitle"/>
+                      <af:panelGroupLayout id="panelGroupLayout23"
+                                           layout="vertical"
+                                           styleClass="infolet-content infolet-padding"
+                                           halign="center">
+                        <af:spacer width="10" height="10" id="spacer11"/>
+                        <af:outputLabel value="#{sessionScope.box2Pending}"
+                                        id="outputLabel20"
+                                        inlineStyle="color:Olive; font-weight:600; font-size:medium;font-size:x-large;"/>
+                      </af:panelGroupLayout>
+                    </af:panelGroupLayout>
+                    <af:panelGroupLayout id="panelGroupLayout24">
+                      <af:outputLabel value="Rejected" id="outputLabel21"
+                                      inlineStyle="margin-top:10px; font-size:small; font-weight:900;margin-left:17px;"
+                                      styleClass="InfoTileTitle"/>
+                      <af:panelGroupLayout id="panelGroupLayout25"
+                                           layout="vertical"
+                                           styleClass="infolet-content infolet-padding"
+                                           halign="center">
+                        <af:spacer width="10" height="10" id="spacer12"/>
+                        <af:outputLabel value="#{sessionScope.box2Rejected}"
+                                        id="outputLabel22"
+                                        inlineStyle="color:Red; font-weight:600; font-size:medium;font-size:x-large;"/>
+                      </af:panelGroupLayout>
+                    </af:panelGroupLayout>
+                  </af:panelGroupLayout>
+                </f:facet>
+                <f:facet name="expanded"/>
+              </acdc:InfoletDC>
+              <acdc:InfoletDC hasBack="YES" hasExpanded="NO" hasFront="YES"
+                              title="Quotation" id="idc3"
+                              expandedSize="INFOLET3X3" frontSize="INFOLET1X1"
+                              backSize="INFOLET1X2">
+                <f:facet name="front">
+                  <af:panelGroupLayout id="panelGroupLayout5">
+                    <af:outputLabel value="Total Quotation"
+                                    id="outputLabel3"
+                                    inlineStyle="margin-top:10px; font-size:small; font-weight:900;margin-left:8px;"
+                                    styleClass="InfoTileTitle"/>
+                    <af:panelGroupLayout id="panelGroupLayout6"
+                                         layout="vertical"
+                                         styleClass="infolet-content infolet-padding"
+                                         halign="center">
+                      <af:spacer width="10" height="10" id="spacer3"/>
+                      <af:outputLabel value="#{sessionScope.box3Total}"
+                                      id="outputLabel4"
+                                      inlineStyle="color:Black; font-weight:600; font-size:medium;font-size:x-large;"/>
+                    </af:panelGroupLayout>
+                  </af:panelGroupLayout>
+                </f:facet>
+                <f:facet name="back">
+                  <af:panelGroupLayout id="panelGroupLayout26"
+                                       layout="horizontal">
+                    <af:panelGroupLayout id="panelGroupLayout27">
+                      <af:outputLabel value="Total" id="outputLabel23"
+                                      inlineStyle="margin-top:10px; font-size:small; font-weight:900;margin-left:17px;"
+                                      styleClass="InfoTileTitle"/>
+                      <af:panelGroupLayout id="panelGroupLayout28"
+                                           layout="vertical"
+                                           styleClass="infolet-content infolet-padding"
+                                           halign="center">
+                        <af:spacer width="10" height="10" id="spacer13"/>
+                        <af:outputLabel value="#{sessionScope.box3Total}"
+                                        id="outputLabel24"
+                                        inlineStyle="color:Black; font-weight:600; font-size:medium;font-size:x-large;"/>
+                      </af:panelGroupLayout>
+                    </af:panelGroupLayout>
+                    <af:panelGroupLayout id="panelGroupLayout29">
+                      <af:outputLabel value="Approved" id="outputLabel25"
+                                      inlineStyle="margin-top:10px; font-size:small; font-weight:900;margin-left:17px;"
+                                      styleClass="InfoTileTitle"/>
+                      <af:panelGroupLayout id="panelGroupLayout30"
+                                           layout="vertical"
+                                           styleClass="infolet-content infolet-padding"
+                                           halign="center">
+                        <af:spacer width="10" height="10" id="spacer14"/>
+                        <af:outputLabel value="#{sessionScope.box3Approved}"
+                                        id="outputLabel26"
+                                        inlineStyle="color:Green; font-weight:600; font-size:medium;font-size:x-large;"/>
+                      </af:panelGroupLayout>
+                    </af:panelGroupLayout>
+                    <af:panelGroupLayout id="panelGroupLayout31">
+                      <af:outputLabel value="Pending" id="outputLabel27"
+                                      inlineStyle="margin-top:10px; font-size:small; font-weight:900;margin-left:17px;"
+                                      styleClass="InfoTileTitle"/>
+                      <af:panelGroupLayout id="panelGroupLayout32"
+                                           layout="vertical"
+                                           styleClass="infolet-content infolet-padding"
+                                           halign="center">
+                        <af:spacer width="10" height="10" id="spacer15"/>
+                        <af:outputLabel value="#{sessionScope.box3Pending}"
+                                        id="outputLabel28"
+                                        inlineStyle="color:Olive; font-weight:600; font-size:medium;font-size:x-large;"/>
+                      </af:panelGroupLayout>
+                    </af:panelGroupLayout>
+                    <af:panelGroupLayout id="panelGroupLayout33">
+                      <af:outputLabel value="Rejected" id="outputLabel29"
+                                      inlineStyle="margin-top:10px; font-size:small; font-weight:900;margin-left:17px;"
+                                      styleClass="InfoTileTitle"/>
+                      <af:panelGroupLayout id="panelGroupLayout34"
+                                           layout="vertical"
+                                           styleClass="infolet-content infolet-padding"
+                                           halign="center">
+                        <af:spacer width="10" height="10" id="spacer16"/>
+                        <af:outputLabel value="#{sessionScope.box3Rejected}"
+                                        id="outputLabel30"
+                                        inlineStyle="color:Red; font-weight:600; font-size:medium;font-size:x-large;"/>
+                      </af:panelGroupLayout>
+                    </af:panelGroupLayout>
+                  </af:panelGroupLayout>
+                </f:facet>
+                <f:facet name="expanded"/>
+              </acdc:InfoletDC>
+              <acdc:InfoletDC hasBack="YES" hasExpanded="NO" hasFront="YES"
+                              title="Unit" id="idc4"
+                              expandedSize="INFOLET3X3" frontSize="INFOLET1X1"
+                              backSize="INFOLET1X2">
+                <f:facet name="front">
+                  <af:panelGroupLayout id="panelGroupLayout7">
+                    <af:outputLabel value="Total Unit" id="outputLabel5"
+                                    inlineStyle="margin-top:10px; font-size:small; font-weight:900;margin-left:8px;"
+                                    styleClass="InfoTileTitle"/>
+                    <af:panelGroupLayout id="panelGroupLayout8"
+                                         layout="vertical"
+                                         styleClass="infolet-content infolet-padding"
+                                         halign="center">
+                      <af:spacer width="10" height="10" id="spacer4"/>
+                      <af:outputLabel value="#{sessionScope.box4Total}"
+                                      id="outputLabel6"
+                                      inlineStyle="color:Black; font-weight:600; font-size:medium;font-size:x-large;"/>
+                    </af:panelGroupLayout>
+                  </af:panelGroupLayout>
+                </f:facet>
+                <f:facet name="back">
+                  <af:panelGroupLayout id="panelGroupLayout35"
+                                       layout="horizontal">
+                    <af:panelGroupLayout id="panelGroupLayout36">
+                      <af:outputLabel value="Total" id="outputLabel31"
+                                      inlineStyle="margin-top:10px; font-size:small; font-weight:900;margin-left:17px;"
+                                      styleClass="InfoTileTitle"/>
+                      <af:panelGroupLayout id="panelGroupLayout37"
+                                           layout="vertical"
+                                           styleClass="infolet-content infolet-padding"
+                                           halign="center">
+                        <af:spacer width="10" height="10" id="spacer17"/>
+                        <af:outputLabel value="#{sessionScope.box4Total}"
+                                        id="outputLabel32"
+                                        inlineStyle="color:Black; font-weight:600; font-size:medium;font-size:x-large;"/>
+                      </af:panelGroupLayout>
+                    </af:panelGroupLayout>
+                    <af:panelGroupLayout id="panelGroupLayout38">
+                      <af:outputLabel value="Approved" id="outputLabel33"
+                                      inlineStyle="margin-top:10px; font-size:small; font-weight:900;margin-left:17px;"
+                                      styleClass="InfoTileTitle"/>
+                      <af:panelGroupLayout id="panelGroupLayout39"
+                                           layout="vertical"
+                                           styleClass="infolet-content infolet-padding"
+                                           halign="center">
+                        <af:spacer width="10" height="10" id="spacer18"/>
+                        <af:outputLabel value="#{sessionScope.box4Approved}"
+                                        id="outputLabel34"
+                                        inlineStyle="color:Green; font-weight:600; font-size:medium;font-size:x-large;"/>
+                      </af:panelGroupLayout>
+                    </af:panelGroupLayout>
+                    <af:panelGroupLayout id="panelGroupLayout40">
+                      <af:outputLabel value="Pending" id="outputLabel35"
+                                      inlineStyle="margin-top:10px; font-size:small; font-weight:900;margin-left:17px;"
+                                      styleClass="InfoTileTitle"/>
+                      <af:panelGroupLayout id="panelGroupLayout41"
+                                           layout="vertical"
+                                           styleClass="infolet-content infolet-padding"
+                                           halign="center">
+                        <af:spacer width="10" height="10" id="spacer19"/>
+                        <af:outputLabel value="#{sessionScope.box4Pending}"
+                                        id="outputLabel36"
+                                        inlineStyle="color:Olive; font-weight:600; font-size:medium;font-size:x-large;"/>
+                      </af:panelGroupLayout>
+                    </af:panelGroupLayout>
+                    <af:panelGroupLayout id="panelGroupLayout42">
+                      <af:outputLabel value="Rejected" id="outputLabel37"
+                                      inlineStyle="margin-top:10px; font-size:small; font-weight:900;margin-left:17px;"
+                                      styleClass="InfoTileTitle"/>
+                      <af:panelGroupLayout id="panelGroupLayout43"
+                                           layout="vertical"
+                                           styleClass="infolet-content infolet-padding"
+                                           halign="center">
+                        <af:spacer width="10" height="10" id="spacer20"/>
+                        <af:outputLabel value="#{sessionScope.box4Rejected}"
+                                        id="outputLabel38"
+                                        inlineStyle="color:Red; font-weight:600; font-size:medium;font-size:x-large;"/>
+                      </af:panelGroupLayout>
+                    </af:panelGroupLayout>
+                  </af:panelGroupLayout>
+                </f:facet>
+                <f:facet name="expanded"/>
+              </acdc:InfoletDC>
+            </af:panelGroupLayout>
+            <af:panelGroupLayout id="pgl4" layout="horizontal"/>
+          </af:panelGroupLayout>
+        </f:facet>
+        <f:facet name="top">
+          <af:panelGroupLayout layout="horizontal"
+                               xmlns:af="http://xmlns.oracle.com/adf/faces/rich"
+                               id="pgl1"
+                               inlineStyle="margin-left:615px;display:inline-block"
+                               rendered="false">
+            <af:commandImageLink id="cil1"
+                                 icon="/images/func_panelnavigation_16_act.png"
+                                 hoverIcon="/images/func_panelnavigation_16_hov.png"
+                                 shortDesc="DashBoard"/>
+            <af:spacer width="10" height="10" id="s1"/>
+            <af:commandImageLink id="cil2"
+                                 icon="/images/func_panelnavigation_16_act.png"
+                                 hoverIcon="/images/func_panelnavigation_16_hov.png"
+                                 shortDesc="Infolet"/>
+          </af:panelGroupLayout>
+        </f:facet>
+      </af:panelStretchLayout>
