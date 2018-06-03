@@ -1,0 +1,45 @@
+    public void onChangeChargeType(ValueChangeEvent valueChangeEvent) {
+        valueChangeEvent.getComponent().processUpdates(FacesContext.getCurrentInstance());
+        System.err.println("New update-->"+valueChangeEvent.getNewValue());
+        if(valueChangeEvent.getNewValue().toString()!="0"){
+            ViewObject otherChargVO =ADFUtils.findIterator("XxscPayApplOthChargesVO1Iterator").getViewObject();
+            System.err.println("/*/--"+otherChargVO.getCurrentRow().getAttribute("ChargeType").toString());
+            int result = checkType(otherChargVO.getCurrentRow().getAttribute("ChargeType").toString());
+            System.err.println("--===>"+result);
+            if(result>1){
+                JSFUtils.addFacesErrorMessage("Charge Type is already exits");
+                otherChargVO.getCurrentRow().setAttribute("ChargeType",null);
+                AdfFacesContext.getCurrentInstance().addPartialTarget(t7);
+            }
+        }
+    }
+    
+    
+    
+    public int checkType(String Type) {
+            String s2 = Type.toString();
+            int count = 0;
+            try {
+            ViewObject otherChargVO =ADFUtils.findIterator("XxscPayApplOthChargesVO1Iterator").getViewObject();
+                otherChargVO.executeQuery();
+                if(otherChargVO.getEstimatedRowCount()>1){
+                    RowSetIterator rs=otherChargVO.createRowSetIterator(null);
+                        while(rs.hasNext()){
+                            Row r=rs.next();
+                            System.err.println(Type+"==COMP=="+r.getAttribute("ChargeType").toString());
+                            if(r.getAttribute("ChargeType")!=null){
+                            //    System.err.println("--charge type"+r.getAttribute("ChargeType").toString());
+                                if(r.getAttribute("ChargeType").toString().equalsIgnoreCase(s2)){
+                                  //  isDuplicate="Y";
+                                    count++;
+                                } 
+                                }
+                            }
+                        }
+                }
+           
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            return count;
+    }
