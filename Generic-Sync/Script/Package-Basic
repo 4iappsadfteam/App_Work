@@ -1,0 +1,157 @@
+
+create or replace PACKAGE   xxstg_integration_pkg
+IS
+   PROCEDURE organizations (p_xml_data CLOB);
+   
+END xxstg_integration_pkg;
+
+
+------------------------------------------------------------
+
+create or replace PACKAGE BODY    xxstg_integration_pkg
+IS
+
+PROCEDURE organizations (p_xml_data CLOB)
+   AS
+      acct_doc        XMLTYPE := xmltype.createxml (p_xml_data);
+
+      TYPE org_tbl_type IS TABLE OF XXSTG_BUSINESS_UNITS%ROWTYPE
+         INDEX BY BINARY_INTEGER;
+
+      l_org_tbl   org_tbl_type;
+
+      CURSOR c_org
+      IS
+                 SELECT  
+						BU_ID                 , 
+						BU_NAME               , 
+						LOCATION_ID           , 
+						BUSINESS_GROUP_ID     , 
+						to_Date(to_char(to_timestamp_tz(DATE_FROM, 'YYYY-MM-DD"T"HH24:MI:SS.ff3TZH:TZM'),'YYYY-MM-DD'),'YYYY-MM-DD') DATE_FROM             , 
+						to_Date(to_char(to_timestamp_tz(DATE_TO, 'YYYY-MM-DD"T"HH24:MI:SS.ff3TZH:TZM'),'YYYY-MM-DD'),'YYYY-MM-DD') DATE_TO             , 
+                        null MANAGER_ID            , 
+						LEGAL_ENTITY_ID       , 
+						PRIMARY_LEDGER_ID     , 
+						0 DEFAULT_SET_ID        , 
+						SHORT_CODE            , 
+						ENABLED_FOR_HR_FLAG   , 
+						null FIN_BUSINESS_UNIT_ID  , 
+						null DEFAULT_CURRENCY_CODE , 
+						PROFIT_CENTER_FLAG    , 
+						'A' STATUS
+						
+                   FROM XMLTABLE (
+                           '/DATA_DS/G_1'
+                           PASSING acct_doc
+                           COLUMNS   
+									 BU_ID                 NUMBER        	PATH  'BU_ID'	
+									,BU_NAME               VARCHAR2(200)    PATH  'BU_NAME'
+									,LOCATION_ID           NUMBER           PATH  'LOCATION_ID'
+									,BUSINESS_GROUP_ID     NUMBER           PATH  'BUSINESS_GROUP_ID'
+									,DATE_FROM             VARCHAR2(100)             PATH  'DATE_FROM'
+									,DATE_TO               VARCHAR2(100)             PATH  'DATE_TO'
+									,MANAGER_ID            VARCHAR2(150)    PATH  'MANAGER_ID'
+									,LEGAL_ENTITY_ID       VARCHAR2(150)    PATH  'LEGAL_ENTITY_ID'
+									,PRIMARY_LEDGER_ID     VARCHAR2(150)    PATH  'PRIMARY_LEDGER_ID'
+									,DEFAULT_SET_ID        VARCHAR2(150)    PATH  'DEFAULT_SET_ID'
+									,SHORT_CODE            VARCHAR2(240)    PATH  'SHORT_CODE'
+									,ENABLED_FOR_HR_FLAG   VARCHAR2(150)    PATH  'ENABLED_FOR_HR_FLAG'
+									,FIN_BUSINESS_UNIT_ID  VARCHAR2(150)    PATH  'FIN_BUSINESS_UNIT_ID'
+									,DEFAULT_CURRENCY_CODE VARCHAR2(150)    PATH  'DEFAULT_CURRENCY_CODE'
+									,PROFIT_CENTER_FLAG    VARCHAR2(150)    PATH  'PROFIT_CENTER_FLAG'
+									,STATUS                VARCHAR2(30)     PATH  'STATUS'
+                                  );
+
+   BEGIN
+      OPEN c_org;
+
+      FETCH c_org
+      BULK COLLECT INTO l_org_tbl;
+      CLOSE c_org;
+
+      FOR i IN l_org_tbl.FIRST .. l_org_tbl.LAST
+      LOOP
+         MERGE INTO XXSTG_BUSINESS_UNITS a
+              USING (SELECT  
+							 l_org_tbl (i).BU_ID					BU_ID                 	
+							,l_org_tbl (i).BU_NAME         		BU_NAME      
+							,l_org_tbl (i).LOCATION_ID           	LOCATION_ID
+							,l_org_tbl (i).BUSINESS_GROUP_ID 		BUSINESS_GROUP_ID     
+							,l_org_tbl (i).DATE_FROM             	DATE_FROM
+							,l_org_tbl (i).DATE_TO               	DATE_TO
+							,l_org_tbl (i).MANAGER_ID            	MANAGER_ID
+							,l_org_tbl (i).LEGAL_ENTITY_ID  		LEGAL_ENTITY_ID       
+							,l_org_tbl (i).PRIMARY_LEDGER_ID 		PRIMARY_LEDGER_ID     
+							,l_org_tbl (i).DEFAULT_SET_ID	 		DEFAULT_SET_ID        
+							,l_org_tbl (i).SHORT_CODE				SHORT_CODE            
+							,l_org_tbl (i).ENABLED_FOR_HR_FLAG 	ENABLED_FOR_HR_FLAG   
+							,l_org_tbl (i).FIN_BUSINESS_UNIT_ID	FIN_BUSINESS_UNIT_ID  
+							,l_org_tbl (i).DEFAULT_CURRENCY_CODE	DEFAULT_CURRENCY_CODE 
+							,l_org_tbl (i).PROFIT_CENTER_FLAG		PROFIT_CENTER_FLAG    
+							,l_org_tbl (i).STATUS               	STATUS 
+                             
+                       FROM DUAL) b
+                 ON (a.BU_ID = b.BU_ID)
+         WHEN MATCHED
+         THEN
+            UPDATE SET   
+				 BU_NAME         		=b.BU_NAME      
+				,LOCATION_ID           	=b.LOCATION_ID
+				,BUSINESS_GROUP_ID 		=b.BUSINESS_GROUP_ID     
+				,DATE_FROM             	=b.DATE_FROM
+				,DATE_TO               	=b.DATE_TO
+				,MANAGER_ID            	=b.MANAGER_ID
+				,LEGAL_ENTITY_ID  		=b.LEGAL_ENTITY_ID       
+				,PRIMARY_LEDGER_ID 		=b.PRIMARY_LEDGER_ID     
+				,DEFAULT_SET_ID	 		=b.DEFAULT_SET_ID        
+				,SHORT_CODE				=b.SHORT_CODE            
+				,ENABLED_FOR_HR_FLAG 	=b.ENABLED_FOR_HR_FLAG   
+				,FIN_BUSINESS_UNIT_ID	=b.FIN_BUSINESS_UNIT_ID  
+				,DEFAULT_CURRENCY_CODE	=b.DEFAULT_CURRENCY_CODE 
+				,PROFIT_CENTER_FLAG		=b.PROFIT_CENTER_FLAG    
+				,STATUS               	=b.STATUS 
+                                         
+         WHEN NOT MATCHED
+         THEN
+            INSERT     (   
+							 BU_ID					
+							,BU_NAME         		
+							,LOCATION_ID           	
+							,BUSINESS_GROUP_ID 		
+							,DATE_FROM             	
+							,DATE_TO               	
+							,MANAGER_ID            	
+							,LEGAL_ENTITY_ID  		
+							,PRIMARY_LEDGER_ID 		
+							,DEFAULT_SET_ID	 		
+							,SHORT_CODE				
+							,ENABLED_FOR_HR_FLAG 	
+							,FIN_BUSINESS_UNIT_ID	
+							,DEFAULT_CURRENCY_CODE	
+							,PROFIT_CENTER_FLAG		
+							,STATUS               	
+                       )
+                VALUES (   
+						    b.BU_ID                 
+							,b.BU_NAME      
+							,b.LOCATION_ID
+							,b.BUSINESS_GROUP_ID     
+							,b.DATE_FROM
+							,b.DATE_TO
+							,b.MANAGER_ID
+							,b.LEGAL_ENTITY_ID       
+							,b.PRIMARY_LEDGER_ID     
+							,b.DEFAULT_SET_ID        
+							,b.SHORT_CODE            
+							,b.ENABLED_FOR_HR_FLAG   
+							,b.FIN_BUSINESS_UNIT_ID  
+							,b.DEFAULT_CURRENCY_CODE 
+							,b.PROFIT_CENTER_FLAG    
+							,b.STATUS 
+                       );
+      END LOOP;
+
+      COMMIT;
+      
+   END organizations;
+END xxstg_integration_pkg;
