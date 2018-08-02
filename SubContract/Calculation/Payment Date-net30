@@ -1,0 +1,6 @@
+Payment Date Calculation
+
+select TERM_ID, NAME, DESCRIPTION, ENABLED_FLAG, START_DATE_ACTIVE, END_DATE_ACTIVE,AP_AR_FLAG, DUE_DAYS, 
+       to_date(:curdate,'yyyy-MM-dd')+nvl(DUE_DAYS,0) as paymentDueDate 
+	   from XXSTG_PAYMENT_TERMS
+where NAME=:BV_NAME
