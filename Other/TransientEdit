@@ -1,0 +1,24 @@
+    public String getBankName_TRNS() {
+
+           Number bankId = null;
+           String departmentName = null;
+           //Check if DepartmentId is not null then get DepartmentName for that Id
+           if (getBankId() != null) {
+               bankId = getBankId();
+               //getDepartmentsVO1 is ViewAccessor of LOV ViewObject
+               Row[] deptRows;
+               deptRows = getBank_VA().getFilteredRows("BankId", bankId);
+               if (deptRows.length > 0) {
+                   departmentName =
+                           deptRows[0].getAttribute("BankName").toString();
+               }
+               return departmentName;
+
+           } else {
+               return (String)getAttributeInternal(BUNAME_TRNS);
+           }
+       }
+       
+           public void setBankName_TRNS(String value) {
+        setAttributeInternal(BANKNAME_TRNS, value);
+    }
