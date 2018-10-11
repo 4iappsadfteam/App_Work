@@ -1,0 +1,9 @@
+ADF Logger
+
+private static final ADFLogger _log = ADFLogger.createADFLogger(AddEditExtCan.class);
+  _log.fine("Enter into onAttributesSave method");
+ _log.fine("Exit from  onAttributesSave method");
+ 
+_log.severe("Exception occured in carParkingExtensionforNormalUnits method"+e.getMessage());
+
+throw new ParseException(e.getMessage(),1);
