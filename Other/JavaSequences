@@ -1,0 +1,7 @@
+EO--Java--EOImpl-Create Assessors and Create Method
+@Override
+    protected void create(AttributeList attributeList) {
+        SequenceImpl seq = new SequenceImpl("DEPARTMENTS_SEQ",this.getDBTransaction());
+            setDepartmentId(seq.getSequenceNumber());
+        super.create(attributeList);
+        }
