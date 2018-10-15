@@ -5,3 +5,7 @@ EO--Java--EOImpl-Create Assessors and Create Method
             setDepartmentId(seq.getSequenceNumber());
         super.create(attributeList);
         }
+-------------------------------------------
+http://andrejusb.blogspot.com/2017/04/adf-bc-groovy-expression-security.html
+-------------------------------------------
+(new oracle.jbo.server.SequenceImpl("EMPLOYEES_SEQ", adf.object.getDBTransaction())).getSequenceNumber()
