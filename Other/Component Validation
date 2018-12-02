@@ -1,0 +1,2 @@
+Edit Button
+disabled="#{bindings.SearchProperty_ROVO1.estimatedRowCount eq 0}" N  "::qryId1"  in edit
