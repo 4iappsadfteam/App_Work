@@ -7,3 +7,8 @@
             value="&lt;link href=&quot;#{facesContext.externalContext.requestContextPath}/image/favicon.ico&quot; rel=&quot;shortcut icon&quot;>" id="o1"/> 
             </f:facet>
        </af:document>
+------------------------------------------------
+
+<link href="#{facesContext.externalContext.requestContextPath}/4i_fav-1.png" rel="shortcut icon">
+
+value="&lt;link href=&quot;#{facesContext.externalContext.requestContextPath}/image/favicon.ico&quot; rel=&quot;shortcut icon&quot;>" 
