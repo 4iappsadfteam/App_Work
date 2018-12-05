@@ -1,0 +1,9 @@
+<af:document title="DineshTest" id="d1">
+            <af:form id="f1">
+                <af:button text="Hi" id="b1"/>
+            </af:form>
+            <f:facet name="metaContainer">
+             <af:outputText escape="false"              
+            value="&lt;link href=&quot;#{facesContext.externalContext.requestContextPath}/image/favicon.ico&quot; rel=&quot;shortcut icon&quot;>" id="o1"/> 
+            </f:facet>
+       </af:document>
