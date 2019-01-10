@@ -1,0 +1,29 @@
+
+
+ if (valueChangeEvent.getNewValue() != null && valueChangeEvent.getNewValue() != "0") {
+            String insname =
+                JSFUtils.resolveExpression("#{row.bindings.InstallmentMethod.attributeValue}") == null ? null :
+                JSFUtils.resolveExpression("#{row.bindings.InstallmentMethod.attributeValue}").toString();
+				Object installTypeObj = getValueFrmExpression(insname);
+				
+				
+				
+				    public Object getValueFrmExpression(String data) {
+        Object Message = null;
+        try {
+            FacesContext fc = FacesContext.getCurrentInstance();
+            Application app = fc.getApplication();
+            ExpressionFactory elFactory = app.getExpressionFactory();
+            ELContext elContext = fc.getELContext();
+            ValueExpression valueExp = elFactory.createValueExpression(elContext, data, Object.class);
+
+            Object obj = valueExp.getValue(elContext);
+            if (obj != null) {
+                Message = obj;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return Message;
+    }
