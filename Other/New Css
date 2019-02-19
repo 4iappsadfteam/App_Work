@@ -1,2 +1,4 @@
 Pannel Table :transparent ellipse (inlineStyle="text-align:center;" for pannelTabbed)
 
+#{(row.Status eq 'Receipted')?'green':(row.Status eq 'Error')?'red':'black'}
+
