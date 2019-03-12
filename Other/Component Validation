@@ -1,2 +1,23 @@
 Edit Button
 disabled="#{bindings.SearchProperty_ROVO1.estimatedRowCount eq 0}" N  "::qryId1"  in edit
+*******************************************************************************************
+<f:attribute name="StartDateComp" value="id4"/>
+			
+UtilsBean flimStripUI=new UtilsBean();
+        // String startDateId =(String) uIComponent.getAttributes().get("StartDateComp");
+	// Check Button is save or save and close
+    String buttonType = (String) actionEvent.getComponent().getAttributes().get("buttonType");
+        // if sava and close if condition will work
+            if(!buttonType.equals("Save")){
+                 flimStripUI._showFilmStrip();
+             }
+ 
+
+    public String onClickSaveandClose() {
+        _log.fine("save and close -Entry");
+        flimStripUI._showFilmStrip();
+        searchScreen="save"; 
+        _log.fine("save and close -Exit");   
+        return searchScreen;
+    }
+************************************************************************************
