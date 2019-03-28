@@ -6,3 +6,20 @@ Pannel Table :transparent ellipse (inlineStyle="text-align:center;" for pannelTa
 .AFPanelFormLayoutContentCell, .xvo{
     padding-top:8px !important;
 }
+----------------------------------------------------------------------------------------------------------------
+/*Table Headeing Colour eg: Facebook Colour*/
+af|column::column-header-cell,
+af|column::column-header-cell:focused {
+   border-width: 0px 1px 1px 0px;
+    background-color: #355393;
+    color: White;
+    font-weight: bold;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    border-right: 1px solid transparent;
+    border: 1px solid white;
+}
+
+----------------------------------------------------------------------------------------------------------------
+ Table Css:text-align: center;
+ ----------------------------------------------------------------------------------------------------------------
