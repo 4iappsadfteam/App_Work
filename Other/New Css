@@ -18,6 +18,7 @@ af|column::column-header-cell:focused {
     padding-bottom: 8px;
     border-right: 1px solid transparent;
     border: 1px solid white;
+    text-align:center;
 }
 
 ----------------------------------------------------------------------------------------------------------------
