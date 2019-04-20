@@ -1,0 +1,67 @@
+    public void onClickFeatureCondition(ValueChangeEvent valueChangeEvent) {
+        valueChangeEvent.getComponent().processUpdates(FacesContext.getCurrentInstance());
+        String field = new String("fCondition");
+        onClickFeatCond(field);
+    }
+
+    public void onClickFeatureType(ValueChangeEvent valueChangeEvent) {
+        valueChangeEvent.getComponent().processUpdates(FacesContext.getCurrentInstance());
+        String field = new String("fType");
+        onClickFeatCond(field);
+    }
+***********************************
+    public void onClickFeatCond(Object field) {
+        try {
+            String featuCond =
+                JSFUtils.resolveExpression("#{row.bindings.FeatureCondition.attributeValue}") == null ? "0" :
+                JSFUtils.resolveExpression("#{row.bindings.FeatureCondition.attributeValue}").toString();
+
+            String featuType =
+                JSFUtils.resolveExpression("#{row.bindings.FeatureType.attributeValue}") == null ? "0" :
+                JSFUtils.resolveExpression("#{row.bindings.FeatureType.attributeValue}").toString();
+
+            int checkCount = checkFeature(featuCond, featuType);
+            System.err.println("checkCount----" + checkCount);
+            if (checkCount >= 2) {
+                if ("fType".equals(field)) {
+                    JSFUtils.addFacesErrorMessage("Please check selected Feature Type already exist !!");
+                    featType.setValue("");
+                    AdfFacesContext.getCurrentInstance().addPartialTarget(featType);
+                }
+
+                if ("fCondition".equals(field)) {
+                    JSFUtils.addFacesErrorMessage("Please check selected Feature Condition already exist !!");
+                    featCond.setValue("");
+                    AdfFacesContext.getCurrentInstance().addPartialTarget(featCond);
+                }
+            } else {
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+******************************************************************
+    public int checkFeature(String FeatureCondition, String FeatureType) {
+        int count = 0;
+        ViewObject propertyFeatureVO = ADFUtils.findIterator("PropertyFeatures_VO1Iterator").getViewObject();
+        if (propertyFeatureVO.getEstimatedRowCount() != 1) {
+            RowSetIterator Rs = propertyFeatureVO.createRowSetIterator(null);
+            while (Rs.hasNext()) {
+                Row r = Rs.next();
+                String feacon =
+                    r.getAttribute("FeatureCondition") == null ? "0" : r.getAttribute("FeatureCondition").toString();
+                String featyp = r.getAttribute("FeatureType") == null ? "0" : r.getAttribute("FeatureType").toString();
+                if (FeatureCondition.equals(feacon)) {
+                    if (FeatureType != null && FeatureType.equals(featyp)) {
+                        count++;
+                    }
+                }
+            }
+
+        } else {
+
+        }
+        return count;
+    }
+****************************
