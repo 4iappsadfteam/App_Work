@@ -1,0 +1,3 @@
+ BigDecimal val = new BigDecimal(cummulativeAmt);
+ applicationLineVO.getCurrentRow().setAttribute("CumAmount",val.setScale(20,BigDecimal.ROUND_HALF_EVEN));
+**********************************************************************
