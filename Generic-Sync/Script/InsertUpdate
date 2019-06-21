@@ -1,0 +1,76 @@
+create or replace procedure rest_insert_property(
+p_prop_id IN xxpm_property_master.PROPERTY_ID %TYPE,
+p_property_name     IN xxpm_property_master.property_name%TYPE,
+p_property_name_tl  IN xxpm_property_master.property_name_tl%TYPE,
+p_property_number   IN xxpm_property_master.property_number%TYPE,
+p_property_shortcode IN xxpm_property_master.property_shortcode%TYPE,
+p_func_id           IN xxpm_property_master.func_id%TYPE,
+p_org_id            IN xxpm_property_master.org_id%TYPE,
+p_project_id        IN xxpm_property_master.project_id %TYPE,
+p_created_by        IN xxpm_property_master.created_by%TYPE,
+p_last_updated_by   IN xxpm_property_master.last_updated_by%TYPE,
+p_last_update_login IN xxpm_property_master.last_update_login%TYPE)
+AS
+BEGIN
+
+MERGE INTO xxpm_property_master a
+              USING dual 
+             
+			   ON (a.property_id =p_prop_id)
+         WHEN MATCHED
+         THEN
+            UPDATE SET   
+                        property_name      =p_property_name ,      
+                        property_name_tl   =p_property_name_tl,    
+                        property_number    =p_property_number ,    
+                        property_shortcode =p_property_shortcode , 
+                        func_id            =p_func_id   ,          
+                        org_id             =p_org_id    ,          
+                        project_id         =p_project_id ,        
+                        created_by         =p_created_by  ,        
+                        creation_date      =sysdate ,      
+                        last_updated_by    =p_last_updated_by ,    
+                        last_update_date   =sysdate,    
+                        last_update_login  =p_last_update_login   
+
+
+
+
+         WHEN NOT MATCHED
+         THEN
+            INSERT     ( 
+			              property_id  ,       
+                          property_name ,      
+                          property_name_tl,    
+                          property_number ,    
+                          property_shortcode , 
+                          func_id,             
+                          org_id,              
+                          project_id ,         
+                          created_by ,         
+                          creation_date ,      
+                          last_updated_by ,    
+                          last_update_date,    
+                          last_update_login   
+
+                       )
+                VALUES ( 
+				         XXPM_PROPERTY_ID_S.nextval,      
+                        p_property_name ,     
+                        p_property_name_tl,   
+                        p_property_number ,   
+                        p_property_shortcode ,
+                        p_func_id   ,         
+                        p_org_id    ,         
+                        p_project_id ,        
+                        p_created_by  ,       
+                         sysdate ,      
+                        p_last_updated_by ,   
+                         sysdate,    
+                        p_last_update_login   
+
+                       );
+
+
+      COMMIT;
+   END rest_insert_property;
