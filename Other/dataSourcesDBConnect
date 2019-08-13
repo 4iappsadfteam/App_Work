@@ -1,0 +1,47 @@
+    public String getDBConnection(String USER_NAME) {
+        String retStr = "";
+        Context ctx;
+        Connection con = null;
+        try{
+        ctx = new InitialContext();
+        String dataSource = "jdbc/prism";
+            DataSource ds = (DataSource)ctx.lookup(dataSource);
+            con = ds.getConnection();
+            
+            String selectSQL =
+                    "SELECT USER_ID,(UPPER(US.USER_NAME)) AS USER_NAME,  US.USER_ROLE_ID USER_ROLE_ID,US.DATA_GROUP_ID,\n" + 
+                    "                                  (select XXFND_LOOKUP_V.LOOKUP_VALUE_NAME \n" + 
+                    "                                  from XXFND_LOOKUP_V XXFND_LOOKUP_V\n" + 
+                    "                                 where XXFND_LOOKUP_V.LV_ACTIVE_YN='Y'\n" + 
+                    "                             AND   XXFND_LOOKUP_V.LOOKUP_VALUE_ID = US.USER_ROLE_ID) LOOKUP_VALUE_NAME\n" + 
+                    "                             FROM XXFND_USER US\n" + 
+                    "                                  where upper(USER_NAME) = upper('"+USER_NAME+"')";
+            
+    //        System.err.println("selectSQL==>"+selectSQL);
+            PreparedStatement preparedStatement = con.prepareStatement(selectSQL);
+    //        System.err.println("=====preparedStatement==" + preparedStatement);
+            ResultSet rs1 = preparedStatement.executeQuery(selectSQL);
+    //        System.err.println("rs1==>"+rs1);
+            while (rs1.next()) {
+                retStr = rs1.getString("LOOKUP_VALUE_NAME");
+//                System.err.println("retStr==>"+retStr);
+            }
+        }
+        catch(Exception e){
+            e.printStackTrace();
+//            System.err.println("Exception:"+e.getMessage());
+        }
+        finally{
+            if(con!=null){
+                try {
+                    con.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+//                    System.err.println("Exception while trying to close the connection:"+e.getMessage());
+                }
+            }
+        }
+//        System.err.println("=====retStr==" + retStr);
+        return retStr;              
+        
+    }
