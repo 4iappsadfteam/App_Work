@@ -1,0 +1,6 @@
+SUBCONT_ADMIN
+SUBCONT
+
+#{securityContext.userInRole['SUBCONT_ADMIN']}
+
+#{securityContext.userInRole['SUBCONT']}
